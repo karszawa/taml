@@ -2,7 +2,7 @@
 //  SecondViewController.swift
 //  Timetable
 //
-//  Created by Cubic on 2015/02/10.
+//  Created by Cubic on 2015/02/09.
 //  Copyright (c) 2015年 Cubic. All rights reserved.
 //
 

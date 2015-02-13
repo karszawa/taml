@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Timetable
 //
-//  Created by Cubic on 2015/02/10.
+//  Created by Cubic on 2015/02/09.
 //  Copyright (c) 2015年 Cubic. All rights reserved.
 //
 
@@ -39,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func applicationWillTerminate(application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+		
 	}
 
 
