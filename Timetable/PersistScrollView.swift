@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 
 class PersistScrollView : UIScrollView, UIScrollViewDelegate {
-	var newPageGenerator : ((Int) -> UIView)?
+	var pageGenerator : ((Int) -> UIView)?
 	var currentPageNumber = 0
 
-	init(frame : CGRect, newPageGenerator : (Int) -> UIView) {
-		self.newPageGenerator = newPageGenerator
+	init(frame : CGRect, pageGenerator : (Int) -> UIView) {
+		self.pageGenerator = pageGenerator
 		super.init(frame: frame)
 		self.pagingEnabled = true
 		self.showsHorizontalScrollIndicator = false;
@@ -23,7 +23,7 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		self.contentOffset.x = frame.width
 		self.delegate = self
 		
-		self.correctContentsPosition(currentPageNumber)
+		self.correctContentsPosition(self.currentPageNumber)
 	}
 	
 	required init(coder aDecoder: NSCoder) {
@@ -47,8 +47,8 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 			subview.removeFromSuperview()
 		}
 		
-		for i in 0...1 {
-			var newPage = newPageGenerator!(currentPageNumber + i - 1)
+		for i in 0...2 {
+			var newPage = pageGenerator!(currentPageNumber + i - 1)
 			newPage.frame.origin.x = newPage.frame.width * CGFloat(i)
 			self.addSubview(newPage)
 		}

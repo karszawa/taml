@@ -9,8 +9,6 @@
 import Foundation
 import UIKit
 
-let PRIMARY_COLOR = UIColor(red: 85.0/255, green: 172.0/255, blue: 238.0/255, alpha: 1.0)
-
 class DatetableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	var date : NSDate
 	var subjects : [Subject]
@@ -48,7 +46,8 @@ class DatetableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		}
 		
 		let cellFrame = CGRect(x: 0, y: 0, width: frame.width, height: 100)
-		var cell = SubjectCell(frame: cellFrame, subject: subjects[indexPath.row])
+		var cell = SubjectCell.instance()
+		cell.subject = subjects[indexPath.row]
 		let longPressGesture = UILongPressGestureRecognizer(target: self, action: "longPressed:")
 		longPressGesture.minimumPressDuration = 1.0;
 		cell.addGestureRecognizer(longPressGesture)
@@ -60,7 +59,7 @@ class DatetableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	func tableView(tableView: UITableView, heightForHeaderInSection section : NSInteger) -> CGFloat {
 		return headerHeight
 	}
-
+	
 	func tableView(tableView: UITableView, viewForHeaderInSection section : NSInteger) -> UIView {
 		var header = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: headerHeight + 15))
 		header.backgroundColor = PRIMARY_COLOR

@@ -8,6 +8,11 @@
 
 import UIKit
 
+let PRIMARY_COLOR = UIColor(red: 85.0/255, green: 172.0/255, blue: 238.0/255, alpha: 1.0)
+let SUB_COLOR1 = UIColor(red: 102/255, green: 117/255, blue: 127/255, alpha: 1.0)
+let SUB_COLOR2 = UIColor(red: 153/255, green: 170/255, blue: 181/255, alpha: 1.0)
+let SUB_COLOR3 = UIColor(red: 204/255, green: 214/255, blue: 221/255, alpha: 1.0)
+
 class FirstViewController: UIViewController {
 	var startDate = NSDate()
 	let calendar = NSCalendar(identifier: NSGregorianCalendar)!
@@ -27,7 +32,7 @@ class FirstViewController: UIViewController {
 			subjects = readXML(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
 		}
 		
-		timetableView = PersistScrollView(frame: self.view.bounds, newPageGenerator : {
+		timetableView = PersistScrollView(frame: self.view.bounds, pageGenerator : {
 			self.dateView(self.calendar.dateByAddingUnit(.DayCalendarUnit, value: $0, toDate: self.startDate, options: nil)!)
 		})
 		
@@ -39,12 +44,10 @@ class FirstViewController: UIViewController {
 	}
 	
 	required init(coder aDecoder: NSCoder) {
-		println("readDB")
 		super.init(coder: aDecoder)
 	}
 	
 	override func viewDidDisappear(animated: Bool) {
-		println("saveDB")
 		saveDB()
 		super.viewDidDisappear(animated)
 	}
@@ -71,11 +74,10 @@ class FirstViewController: UIViewController {
 	func readXML(url : NSURL, myGrade : Int, myDepartment : String, myCourse : String?) -> [[Subject]] {
 		var subjects = [[Subject]](count: 7, repeatedValue: [Subject]())
 		let xml = SWXMLHash.parse(NSData(contentsOfURL: url)!)
-		var prevGrade = 0 // Gradeが未入力の項目がある
 		
 		for lecture in xml["TimeTable_xml"]["TimeTable"]["Lectures"]["Lecture"] {
 			let name = lecture["Name"].element?.text
-			var grade = lecture["Grade"].element?.text?.toInt() ?? prevGrade
+			var grade = lecture["Grade"].element?.text?.toInt()
 			let department = lecture["Department"].element!.text!
 			let wday = lecture["Wday"].element!.text!.toInt()!
 			let location = lecture["Location"].element?.text
@@ -99,10 +101,12 @@ class FirstViewController: UIViewController {
 					subjects[wday].append(Subject(title: name, location: location, period: dic[startTime!]!, deduction: 0))
 				}
 			}
-			
-			prevGrade = grade
 		}
 		
 		return subjects
+	}
+
+	override func preferredStatusBarStyle() -> UIStatusBarStyle {
+		return UIStatusBarStyle.BlackOpaque
 	}
 }
