@@ -28,8 +28,10 @@ class SubjectCell: UITableViewCell {
         // Initialization code
     }
 	
-	class func instance() -> SubjectCell {
-		return UINib(nibName: "SubjectCell", bundle: nil).instantiateWithOwner(self, options: nil)[0] as SubjectCell
+	class func instance(subject : Subject) -> SubjectCell {
+		var inst = UINib(nibName: "SubjectCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SubjectCell
+		inst.subject = subject
+		return inst
 	}
 	
 	override func setHighlighted(highlighted: Bool, animated: Bool) {

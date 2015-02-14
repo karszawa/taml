@@ -8,37 +8,39 @@
 
 import UIKit
 
+let TODAY = NSDate()
 let PRIMARY_COLOR = UIColor(red: 85.0/255, green: 172.0/255, blue: 238.0/255, alpha: 1.0)
 let SUB_COLOR1 = UIColor(red: 102/255, green: 117/255, blue: 127/255, alpha: 1.0)
 let SUB_COLOR2 = UIColor(red: 153/255, green: 170/255, blue: 181/255, alpha: 1.0)
 let SUB_COLOR3 = UIColor(red: 204/255, green: 214/255, blue: 221/255, alpha: 1.0)
+let SUB_COLOR4 = UIColor(red: 245/255, green: 248/255, blue: 250/255, alpha: 1.0)
 
 class FirstViewController: UIViewController {
-	var startDate = NSDate()
 	let calendar = NSCalendar(identifier: NSGregorianCalendar)!
-	var timetableView: PersistScrollView!
+	@IBOutlet weak var timetableView: PersistScrollView!
 	
 	var subjects = [[Subject]](count: 7, repeatedValue: [Subject]())
 	var exceptSubjects = [ "中国語", "フランス語" ]
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		if let s = readDB() {
-			subjects = s
-		} else {
-			println("Read from WEB")
+
+		subjects = loadDB() ?? {
 			let url = NSURL(string: "http://www.akashi.ac.jp/data/timetable/timetable201410.xml")!
-			subjects = readXML(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
+			return self.readXML(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
+		}()
+		
+		self.timetableView.pageGenerator = {
+			self.dateView(self.calendar.dateByAddingUnit(.DayCalendarUnit, value: $0, toDate: TODAY, options: nil)!)
 		}
-		
-		timetableView = PersistScrollView(frame: self.view.bounds, pageGenerator : {
-			self.dateView(self.calendar.dateByAddingUnit(.DayCalendarUnit, value: $0, toDate: self.startDate, options: nil)!)
-		})
-		
-		self.view.addSubview(self.timetableView!)
 	}
 
+	override func viewDidLayoutSubviews() {
+		self.timetableView.contentSize.width = self.timetableView.frame.width * 3 // クソ
+		self.timetableView.adjustContentsPosition() // クソ
+		self.timetableView.contentOffset.x = self.timetableView.frame.width // クソ
+	}
+	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 	}
@@ -54,19 +56,19 @@ class FirstViewController: UIViewController {
 
 	func dateView(date : NSDate) -> UIView {
 		let day = calendar.component(.WeekdayCalendarUnit, fromDate: date) - 1
-		return DatetableView(frame: self.view.bounds, date: date, subjcets: &(subjects[day]), parentViewController: self)
+		return DateTableView.instance(date, subjcets: &(subjects[day]))
 	}
 	
-	func readDB() -> [[Subject]]? {
+	func loadDB() -> [[Subject]]? {
 		let paths = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)
-		let path = paths[0].stringByAppendingPathComponent("sample.dat")
+		let path = paths.first!.stringByAppendingPathComponent("sample.dat")
 		
-		return (NSKeyedUnarchiver.unarchiveObjectWithFile(path) as? [[Subject]])
+		return NSKeyedUnarchiver.unarchiveObjectWithFile(path) as? [[Subject]]
 	}
 	
 	func saveDB() -> Bool {
 		let paths = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)
-		let path = paths[0].stringByAppendingPathComponent("sample.dat")
+		let path = paths.first!.stringByAppendingPathComponent("sample.dat")
 		
 		return NSKeyedArchiver.archiveRootObject(self.subjects, toFile: path)
 	}
@@ -104,9 +106,5 @@ class FirstViewController: UIViewController {
 		}
 		
 		return subjects
-	}
-
-	override func preferredStatusBarStyle() -> UIStatusBarStyle {
-		return UIStatusBarStyle.BlackOpaque
 	}
 }

@@ -9,31 +9,32 @@
 import Foundation
 import UIKit
 
-class DatetableView : UITableView, UITableViewDelegate, UITableViewDataSource {
-	var date : NSDate
-	var subjects : [Subject]
-	var parentViewController : UIViewController
-	var calendar = NSCalendar(identifier: NSGregorianCalendar)!
-	let weekdays = [ "", "日", "月", "火", "水", "木", "金", "土" ]
-	let months = [ "", "Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec." ]
+let JWEEKDAYS = [ "", "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日" ]
+let MONTHS = [ "", "Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec." ]
 
-	init(frame : CGRect, date : NSDate, inout subjcets : [Subject], parentViewController : UIViewController) {
-		self.date = date
-		self.subjects = subjcets
-		self.parentViewController = parentViewController
-		super.init(frame : frame, style: .Plain)
-		self.delegate = self
-		self.dataSource = self
-		self.bounces = false
-		self.scrollEnabled = true
-		self.estimatedRowHeight = 100
-		self.rowHeight = UITableViewAutomaticDimension
-		self.separatorInset = UIEdgeInsetsZero
-		self.tableFooterView = UIView()
-	}
+class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
+	var date : NSDate? = nil
+	var subjects : [Subject] = []
+	var calendar = NSCalendar(identifier: NSGregorianCalendar)!
 
 	required init(coder aDecoder: NSCoder) {
-	    fatalError("init(coder:) has not been implemented")
+		super.init(coder: aDecoder)
+	}
+	
+	override func awakeFromNib() {
+		super.awakeFromNib()
+
+		self.delegate = self
+		self.dataSource = self
+	}
+	
+	class func instance(date : NSDate, inout subjcets : [Subject]) -> DateTableView {
+		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as DateTableView => {
+			$0.date = date
+			$0.subjects = subjcets
+			$0.reloadData()
+			$0.tableFooterView = UIView()
+		}
 	}
 	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -41,48 +42,46 @@ class DatetableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		if let ret = tableView.cellForRowAtIndexPath(indexPath) {
-			return ret
-		}
-		
-		let cellFrame = CGRect(x: 0, y: 0, width: frame.width, height: 100)
-		var cell = SubjectCell.instance()
-		cell.subject = subjects[indexPath.row]
-		let longPressGesture = UILongPressGestureRecognizer(target: self, action: "longPressed:")
-		longPressGesture.minimumPressDuration = 1.0;
-		cell.addGestureRecognizer(longPressGesture)
-
-		return cell
-	}
-	
-	let headerHeight : CGFloat = 80
-	func tableView(tableView: UITableView, heightForHeaderInSection section : NSInteger) -> CGFloat {
-		return headerHeight
+		return tableView.cellForRowAtIndexPath(indexPath) ?? {
+			SubjectCell.instance(self.subjects[indexPath.row]) => {
+				let longPressGesture = UILongPressGestureRecognizer(target: self, action: "longPressed:")
+				longPressGesture.minimumPressDuration = 1.0;
+				$0.addGestureRecognizer(longPressGesture)
+			}
+		}()
 	}
 	
 	func tableView(tableView: UITableView, viewForHeaderInSection section : NSInteger) -> UIView {
-		var header = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: headerHeight + 15))
-		header.backgroundColor = PRIMARY_COLOR
-		
-		var headerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: headerHeight))
-		headerLabel.backgroundColor = PRIMARY_COLOR
-		headerLabel.font = UIFont.systemFontOfSize(28)
-		headerLabel.textColor = UIColor.whiteColor()
-		var comps = (0, 0, 0, 0)
-		calendar.getEra(&comps.0, year: &comps.1, month: &comps.2, day: &comps.3, fromDate: date)
-		headerLabel.text = "\(comps.2)月\(comps.3)日 \(weekdays[calendar.component(.WeekdayCalendarUnit, fromDate: date)])曜日"
-		headerLabel.sizeToFit()
-		headerLabel.center = header.convertPoint(header.center, fromCoordinateSpace: header)
-		header.addSubview(headerLabel)
-
-		return header
+		return self.tableHeaderView ?? {
+			var label = UILabel(frame: CGRect(x: 0, y: 8, width: self.frame.size.width, height: self.sectionHeaderHeight - 8)) => {
+				$0.font = .systemFontOfSize(27)
+				$0.textAlignment = .Center
+				$0.backgroundColor = PRIMARY_COLOR
+				$0.textColor = SUB_COLOR4
+			}
+			
+			if self.date == TODAY {
+				label.text = "今日"
+			} else if self.date == self.calendar.dateByAddingUnit(.DayCalendarUnit, value: 1, toDate: TODAY, options: nil) {
+				label.text = "明日"
+			} else {
+				var month = 0, day = 0
+				self.calendar.getEra(nil, year: nil, month: &month, day: &day, fromDate: TODAY)
+				label.text = "\(month)月\(day)日 \(JWEEKDAYS[self.calendar.component(.WeekdayCalendarUnit, fromDate: self.date!)])"
+			}
+			
+			return UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.sectionHeaderHeight)) => {
+				$0.backgroundColor = PRIMARY_COLOR
+				$0.addSubview(label)
+			}
+		}()
 	}
 	
 	func longPressed(sender: UILongPressGestureRecognizer) {
 		if sender.state != UIGestureRecognizerState.Began { return }
 
-		let p = sender.locationInView(self)
-		let index = self.indexPathForRowAtPoint(p)!.row
+		let point = sender.locationInView(self)
+		let index = self.indexPathForRowAtPoint(point)!.row
 		
 		var alert = UIAlertController(title: subjects[index].title, message: "明日は頑張ろう", preferredStyle: .ActionSheet)
 		
@@ -94,12 +93,12 @@ class DatetableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 			self.subjects[index].deduction -= 0.5
 			self.reloadData()
 		})
-		let cancellAction = UIAlertAction(title: "キャンセル", style: UIAlertActionStyle.Cancel, handler: nil)
+		let cancellAction = UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil)
 		
 		alert.addAction(absenceAction)
 		alert.addAction(tardinessAction)
 		alert.addAction(cancellAction)
 		
-		self.parentViewController.presentViewController(alert, animated: true, completion: nil)
+		self.getParentViewController()!.presentViewController(alert, animated: true, completion: nil)
 	}
 }

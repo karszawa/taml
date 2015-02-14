@@ -2,27 +2,17 @@
 
 import Cocoa
 
-var hoge : Int? = nil
-
-if hoge == nil {
-	println("Hello")
+extension NSObject {
+	func set<T>(initializer : (T) -> ()) -> T {
+		initializer(self as T)
+		return self as T
+	}
 }
 
-class Hoge {
-	var hoge = "C"
+
+var label = UILabel(frame: CGRect(x: 0, y: 0, width: 9, height: 0)).set() {
+	$0.font = .systemFontOfSize(27)
+	$0.textAlignment = .Center
+	$0.backgroundColor = PRIMARY_COLOR
+	$0.textColor = SUB_COLOR4
 }
-
-func fuga(hoge : Hoge) {
-	hoge.hoge = "B"
-}
-
-var h = Hoge()
-
-fuga(h)
-
-h.hoge
-
-
-
-
-

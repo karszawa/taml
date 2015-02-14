@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--時間割-->
@@ -15,15 +16,29 @@
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ih-dI-Ddp" customClass="PersistScrollView" customModule="Timetable" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                            </scrollView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="5Ih-dI-Ddp" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" constant="-16" id="42s-U8-BX2"/>
+                            <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="5Ih-dI-Ddp" secondAttribute="bottom" id="H0y-6q-RYi"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5Ih-dI-Ddp" secondAttribute="trailing" constant="-16" id="cer-xU-GNL"/>
+                            <constraint firstItem="5Ih-dI-Ddp" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="topMargin" id="pV2-z3-VOT"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="時間割" image="first" id="acW-dT-cKf"/>
+                    <connections>
+                        <outlet property="timetableView" destination="5Ih-dI-Ddp" id="6B4-ZX-768"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="-320"/>
+            <point key="canvasLocation" x="747" y="-157"/>
         </scene>
-        <!--出席数危機リスト-->
+        <!--出欠管理-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
                 <viewController id="8rJ-Kc-sve" customClass="SecondViewController" customModule="Timetable" customModuleProvider="target" sceneMemberID="viewController">
@@ -57,11 +72,11 @@
                             <constraint firstAttribute="centerY" secondItem="zEq-FU-wV5" secondAttribute="centerY" id="qzY-Ky-pLD"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="出席数危機リスト" image="second" id="cPa-gy-q4n"/>
+                    <tabBarItem key="tabBarItem" title="出欠管理" image="second" id="cPa-gy-q4n"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="360"/>
+            <point key="canvasLocation" x="731" y="512"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">

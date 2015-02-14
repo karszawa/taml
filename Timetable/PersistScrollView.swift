@@ -10,24 +10,20 @@ import Foundation
 import UIKit
 
 class PersistScrollView : UIScrollView, UIScrollViewDelegate {
-	var pageGenerator : ((Int) -> UIView)?
-	var currentPageNumber = 0
-
-	init(frame : CGRect, pageGenerator : (Int) -> UIView) {
-		self.pageGenerator = pageGenerator
-		super.init(frame: frame)
-		self.pagingEnabled = true
-		self.showsHorizontalScrollIndicator = false;
-		self.showsVerticalScrollIndicator = false;
-		self.contentSize.width = frame.width * 3
-		self.contentOffset.x = frame.width
-		self.delegate = self
-		
-		self.correctContentsPosition(self.currentPageNumber)
+	var pageGenerator : ((Int) -> UIView)? {
+		didSet {
+			self.adjustContentsPosition()
+		}
 	}
 	
+	var currentPageNumber = 0
+
 	required init(coder aDecoder: NSCoder) {
-	    fatalError("init(coder:) has not been implemented")
+		super.init(coder: aDecoder)
+	}
+	
+	override func awakeFromNib() {
+		self.delegate = self
 	}
 	
 	func scrollViewDidScroll(scrollView: UIScrollView) {
@@ -38,19 +34,28 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		}
 		
 		self.currentPageNumber += Int(displacement)
-		self.correctContentsPosition(self.currentPageNumber)
+		self.adjustContentsPosition()
 		self.contentOffset.x = frame.width
 	}
 	
-	func correctContentsPosition(index : Int) {
+	func adjustContentsPosition() {
 		for subview in subviews {
 			subview.removeFromSuperview()
 		}
 		
 		for i in 0...2 {
-			var newPage = pageGenerator!(currentPageNumber + i - 1)
-			newPage.frame.origin.x = newPage.frame.width * CGFloat(i)
+			var newPage = pageGenerator!(currentPageNumber + i - 1) as DateTableView => {
+				$0.frame.size = self.frame.size
+				$0.frame.origin.x = self.frame.width * CGFloat(i)
+			}
+			
 			self.addSubview(newPage)
+//			self.addConstraint(NSLayoutConstraint(item: newPage, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0))
 		}
+		
+//		self.subviews[1].addConstraints([
+//			NSLayoutConstraint(item: self.subviews[0], attribute: .Right, relatedBy: .Equal, toItem: self.subviews[1], attribute: .Left, multiplier: 1, constant: 0),
+//			NSLayoutConstraint(item: self.subviews[2], attribute: .Left, relatedBy: .Equal, toItem: self.subviews[1], attribute: .Right, multiplier: 1, constant: 0)
+//		])
 	}
 }
