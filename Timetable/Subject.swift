@@ -7,33 +7,84 @@
 //
 
 import Foundation
+import Realm
 
-class Subject : NSObject, NSCoding {
-	internal let title : String?
-	internal let location : String?
-	internal let period : String?
-	internal var deduction : Float
+class Subject : RLMObject {
+	dynamic var title = ""
+	dynamic var location = ""
+	dynamic var deduction = Float(0)
+	dynamic var sessions = RLMArray(objectClassName: Session.className())
 	
-	init(title : String?, location : String?, period : Int, deduction : Float) {
+	override init() {
+		super.init()
+	}
+	
+	override init(object: AnyObject?) {
+		super.init(object:object)
+	}
+	
+	override init(object value: AnyObject!, schema: RLMSchema!) {
+		super.init(object: value, schema: schema)
+	}
+	
+	override init(objectSchema: RLMObjectSchema) {
+		super.init(objectSchema: objectSchema)
+	}
+	
+	init(title : String, location : String, deduction : Float) {
+		super.init()
+
 		self.title = title
 		self.location = location
-		self.period = period.description + " 限"
 		self.deduction = deduction
-		super.init()
 	}
 	
-	required init(coder aDecoder: NSCoder) {
-		self.title = aDecoder.decodeObjectForKey("TITLE") as? String
-		self.location = aDecoder.decodeObjectForKey("LOCATION") as? String
-		self.period = aDecoder.decodeObjectForKey("PERIOD") as? String
-		self.deduction = aDecoder.decodeFloatForKey("DEDUCTION")
-		super.init()
+	override class func primaryKey() -> String {
+		return "title"
 	}
 	
-	func encodeWithCoder(aCoder: NSCoder) {
-		aCoder.encodeObject(self.title?, forKey: "TITLE")
-		aCoder.encodeObject(self.location?, forKey: "LOCATION")
-		aCoder.encodeObject(self.period?, forKey: "PERIOD")
-		aCoder.encodeFloat(self.deduction, forKey: "DEDUCTION")
+	class func find(title : String) -> Subject? {
+		return Subject.objectsWithPredicate(NSPredicate(format: "title = %@", title)).firstObject() as? Subject
 	}
 }
+
+class Session : RLMObject {
+	dynamic var subject = Subject()
+	dynamic var day = 0
+	dynamic var period  = 0
+	dynamic var key = ""
+	
+	override init() {
+		super.init()
+	}
+	
+	override init(object: AnyObject?) {
+		super.init(object:object)
+	}
+	
+	override init(object value: AnyObject!, schema: RLMSchema!) {
+		super.init(object: value, schema: schema)
+	}
+	
+	override init(objectSchema: RLMObjectSchema) {
+		super.init(objectSchema: objectSchema)
+	}
+	
+	init(day : Int, period : Int, subject : Subject) {
+		super.init()
+		
+		self.day = day
+		self.period = period
+		self.subject = subject
+		self.key = day.description + " " + period.description
+	}
+	
+	override class func primaryKey() -> String {
+		return "key"
+	}
+	
+	class func find(title : String) -> Subject? {
+		return Subject.objectsWithPredicate(NSPredicate(format: "key = %@", title)).firstObject() as? Subject
+	}
+}
+

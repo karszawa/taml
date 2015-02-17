@@ -10,6 +10,7 @@
 		A001E6FB1A92FEA3009F712F /* RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001E6FA1A92FEA3009F712F /* RLMSupport.swift */; };
 		A001E6FD1A92FEDF009F712F /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FC1A92FEDF009F712F /* Realm.framework */; };
 		A001E6FF1A92FF09009F712F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FE1A92FF09009F712F /* libc++.dylib */; };
+		A001E7011A9316DC009F712F /* TimeToPeriod.plist in Resources */ = {isa = PBXBuildFile; fileRef = A001E7001A9316DC009F712F /* TimeToPeriod.plist */; };
 		A03890231A8DF71B006FFC51 /* SubjectCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A03890221A8DF71B006FFC51 /* SubjectCell.xib */; };
 		A038902B1A8DFC64006FFC51 /* SubjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A038902A1A8DFC64006FFC51 /* SubjectCell.swift */; };
 		A04CCE8F1A8F459A00C65317 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04CCE8E1A8F459A00C65317 /* Extensions.swift */; };
@@ -40,6 +41,7 @@
 		A001E6FA1A92FEA3009F712F /* RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RLMSupport.swift; sourceTree = "<group>"; };
 		A001E6FC1A92FEDF009F712F /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		A001E6FE1A92FF09009F712F /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
+		A001E7001A9316DC009F712F /* TimeToPeriod.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TimeToPeriod.plist; sourceTree = "<group>"; };
 		A03890221A8DF71B006FFC51 /* SubjectCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubjectCell.xib; sourceTree = "<group>"; };
 		A038902A1A8DFC64006FFC51 /* SubjectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubjectCell.swift; sourceTree = "<group>"; };
 		A04CCE8E1A8F459A00C65317 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 			children = (
 				A0742C071A8A198B005C9174 /* MyPlayground.playground */,
 				A0742BD81A8A062E005C9174 /* Info.plist */,
+				A001E7001A9316DC009F712F /* TimeToPeriod.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A001E7011A9316DC009F712F /* TimeToPeriod.plist in Resources */,
 				A03890231A8DF71B006FFC51 /* SubjectCell.xib in Resources */,
 				A0742BE11A8A062E005C9174 /* Main.storyboard in Resources */,
 				A0742BE31A8A062E005C9174 /* Images.xcassets in Resources */,

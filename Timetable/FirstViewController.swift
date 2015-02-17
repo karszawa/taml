@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Realm
 
 let TODAY = NSDate()
 let PRIMARY_COLOR = UIColor(red: 85.0/255, green: 172.0/255, blue: 238.0/255, alpha: 1.0)
@@ -16,29 +17,33 @@ let SUB_COLOR3 = UIColor(red: 204/255, green: 214/255, blue: 221/255, alpha: 1.0
 let SUB_COLOR4 = UIColor(red: 245/255, green: 248/255, blue: 250/255, alpha: 1.0)
 
 class FirstViewController: UIViewController {
-	let calendar = NSCalendar(identifier: NSGregorianCalendar)!
 	@IBOutlet weak var timetableView: PersistScrollView!
+	var realm : RLMRealm?
 	
-	var subjects = [[Subject]](count: 7, repeatedValue: [Subject]())
 	var exceptSubjects = [ "中国語", "フランス語" ]
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		subjects = loadDB() ?? {
-			let url = NSURL(string: "http://www.akashi.ac.jp/data/timetable/timetable201410.xml")!
-			return self.readXML(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
-		}()
+		realmSetSchema()
+		
+		realm = RLMRealm.defaultRealm()
+		
+		if Session.allObjects().count == 0 {
+			if let url = NSURL(string: "http://www.akashi.ac.jp/data/timetable/timetable201410.xml") {
+				self.loadFromWeb(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
+			}
+		}
 		
 		self.timetableView.pageGenerator = {
-			self.dateView(self.calendar.dateByAddingUnit(.DayCalendarUnit, value: $0, toDate: TODAY, options: nil)!)
+			self.dateView(TODAY.succ(.DayCalendarUnit, value: $0)!)
 		}
 	}
 
-	override func viewDidLayoutSubviews() {
-		self.timetableView.contentSize.width = self.timetableView.frame.width * 3 // クソ
-		self.timetableView.adjustContentsPosition() // クソ
-	}
+//	override func viewDidLayoutSubviews() {
+////		self.timetableView.contentSize.width = self.timetableView.frame.width * 3 // クソ
+////		self.timetableView.adjustContentsPosition() // クソ
+//	}
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
@@ -49,31 +54,14 @@ class FirstViewController: UIViewController {
 	}
 	
 	override func viewDidDisappear(animated: Bool) {
-		saveDB()
 		super.viewDidDisappear(animated)
 	}
 
 	func dateView(date : NSDate) -> UIView {
-		let day = calendar.component(.WeekdayCalendarUnit, fromDate: date) - 1
-		return DateTableView.instance(date, subjcets: &(subjects[day]))
+		return DateTableView.instance(date, sessions: Session.objectsWhere("day = \(date.weekday() - 1)"))
 	}
 	
-	func loadDB() -> [[Subject]]? {
-		let paths = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)
-		let path = paths.first!.stringByAppendingPathComponent("sample.dat")
-		
-		return NSKeyedUnarchiver.unarchiveObjectWithFile(path) as? [[Subject]]
-	}
-	
-	func saveDB() -> Bool {
-		let paths = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)
-		let path = paths.first!.stringByAppendingPathComponent("sample.dat")
-		
-		return NSKeyedArchiver.archiveRootObject(self.subjects, toFile: path)
-	}
-	
-	func readXML(url : NSURL, myGrade : Int, myDepartment : String, myCourse : String?) -> [[Subject]] {
-		var subjects = [[Subject]](count: 7, repeatedValue: [Subject]())
+	func loadFromWeb(url : NSURL, myGrade : Int, myDepartment : String, myCourse : String?) {
 		let xml = SWXMLHash.parse(NSData(contentsOfURL: url)!)
 		
 		for lecture in xml["TimeTable_xml"]["TimeTable"]["Lectures"]["Lecture"] {
@@ -91,19 +79,40 @@ class FirstViewController: UIViewController {
 			}
 			
 			if grade == myGrade && department == myDepartment && course == myCourse {
-				if startTime == "09:00:00+09:00" && endTime == "12:10:00+09:00" {
-					subjects[wday].append(Subject(title: name, location: location, period: 1, deduction: 0))
-					subjects[wday].append(Subject(title: name, location: location, period: 2, deduction: 0))
-				} else if startTime == "13:00:00+09:00" && endTime == "16:10:00+09:00" {
-					subjects[wday].append(Subject(title: name, location: location, period: 3, deduction: 0))
-					subjects[wday].append(Subject(title: name, location: location, period: 4, deduction: 0))
-				} else {
-					let dic = ["09:00:00+09:00": 1, "10:40:00+09:00": 2, "13:00:00+09:00": 3, "14:40:00+09:00": 4]
-					subjects[wday].append(Subject(title: name, location: location, period: dic[startTime!]!, deduction: 0))
+				let dictionary = [
+					"09:00:00+09:00": ["10:30:00+09:00" : [1], "12:10:00+09:00" : [1, 2]],
+					"10:40:00+09:00": ["12:10:00+09:00" : [2]],
+					"13:00:00+09:00": ["14:30:00+09:00" : [3], "16:10:00+09:00" : [3, 4]],
+					"14:40:00+09:00": ["16:10:00+09:00" : [4]]
+				]
+				
+				realm!.transactionWithBlock() {
+					for p in dictionary[startTime!]![endTime!]! {
+						var subject = Subject(title: name!, location: location!, deduction: 0.0)
+						var session = Session(day: wday, period: p, subject: subject)
+						subject.sessions.addObject(session)
+						
+						self.realm!.addOrUpdateObject(subject)
+						self.realm!.addOrUpdateObject(session)
+					}
 				}
 			}
 		}
-		
-		return subjects
+	}
+	
+	func longPressed(sender: UILongPressGestureRecognizer) {
+		println("longPressed in Controller")
+	}
+	
+	
+	func realmSetSchema() {
+		RLMRealm.setSchemaVersion(6, forRealmAtPath: RLMRealm.defaultRealmPath(),
+			withMigrationBlock: { migration, oldSchemaVersion in
+				migration.enumerateObjects(Session.className()) { oldObject, newObject in
+					if oldSchemaVersion < 6 {
+						
+					}
+				}
+		})
 	}
 }

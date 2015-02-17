@@ -44,12 +44,19 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		}
 		
 		for i in 0...2 {
-			var newPage = pageGenerator!(currentPageNumber + i - 1) as DateTableView => {
+			var newPage = pageGenerator!(currentPageNumber + i) as DateTableView => {
 				$0.frame.size = self.frame.size
-				$0.frame.origin.x = self.frame.width * CGFloat(i - 1)
+				$0.frame.origin.x = self.frame.width * CGFloat(i)
 			}
 			
 			self.addSubview(newPage)
 		}
+	}
+	
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		
+		self.contentSize.width = self.frame.width * 3
+		self.adjustContentsPosition()
 	}
 }

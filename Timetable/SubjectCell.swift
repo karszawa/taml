@@ -14,19 +14,19 @@ class SubjectCell: UITableViewCell {
 	@IBOutlet weak var titleLabelView: UILabel!
 	@IBOutlet weak var deductionLabelView: UILabel!
 
-	var subject : Subject? {
+	var session : Session? {
 		didSet {
-			self.periodLabelView.text = self.subject?.period
-			self.locationLabelView.text = self.subject?.location
-			self.titleLabelView.text = self.subject?.title
-			self.deductionLabelView.text = self.subject?.deduction.description
+			self.periodLabelView.text = self.session.map { $0.period.description + "限" }
+			self.locationLabelView.text = self.session?.subject.location
+			self.titleLabelView.text = self.session?.subject.title
+			self.deductionLabelView.text = self.session?.subject.deduction.description
 		}
 	}
 	
-	class func instance(subject : Subject) -> SubjectCell {
-		var inst = UINib(nibName: "SubjectCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SubjectCell
-		inst.subject = subject
-		return inst
+	class func instance(session : Session) -> SubjectCell {
+		return UINib(nibName: "SubjectCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SubjectCell => {
+			$0.session = session
+		}
 	}
 	
 	override func setHighlighted(highlighted: Bool, animated: Bool) {
