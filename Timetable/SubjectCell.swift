@@ -23,11 +23,6 @@ class SubjectCell: UITableViewCell {
 		}
 	}
 	
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-	
 	class func instance(subject : Subject) -> SubjectCell {
 		var inst = UINib(nibName: "SubjectCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SubjectCell
 		inst.subject = subject

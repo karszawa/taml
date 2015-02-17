@@ -13,7 +13,7 @@ let JWEEKDAYS = [ "", "日曜日", "月曜日", "火曜日", "水曜日", "木�
 let MONTHS = [ "", "Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec." ]
 
 class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
-	var date : NSDate? = nil
+	var date : NSDate?
 	var subjects : [Subject] = []
 	var calendar = NSCalendar(identifier: NSGregorianCalendar)!
 
@@ -78,27 +78,30 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	}
 	
 	func longPressed(sender: UILongPressGestureRecognizer) {
-		if sender.state != UIGestureRecognizerState.Began { return }
+		if sender.state != UIGestureRecognizerState.Began {
+			return
+		}
 
 		let point = sender.locationInView(self)
-		let index = self.indexPathForRowAtPoint(point)!.row
+		if let index = self.indexPathForRowAtPoint(point)?.row {
 		
-		var alert = UIAlertController(title: subjects[index].title, message: "明日は頑張ろう", preferredStyle: .ActionSheet)
-		
-		let absenceAction = UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
-			self.subjects[index].deduction -= 1.0
-			self.reloadData()
-		})
-		let tardinessAction = UIAlertAction(title: "遅刻(-0.5)", style: .Default, handler: { (action: UIAlertAction!) in
-			self.subjects[index].deduction -= 0.5
-			self.reloadData()
-		})
-		let cancellAction = UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil)
-		
-		alert.addAction(absenceAction)
-		alert.addAction(tardinessAction)
-		alert.addAction(cancellAction)
-		
-		self.getParentViewController()!.presentViewController(alert, animated: true, completion: nil)
+			var alert = UIAlertController(title: subjects[index].title, message: "明日は頑張ろう", preferredStyle: .ActionSheet)
+			
+			let absenceAction = UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
+				self.subjects[index].deduction -= 1.0
+				self.reloadData()
+			})
+			let tardinessAction = UIAlertAction(title: "遅刻(-0.5)", style: .Default, handler: { (action: UIAlertAction!) in
+				self.subjects[index].deduction -= 0.5
+				self.reloadData()
+			})
+			let cancellAction = UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil)
+			
+			alert.addAction(absenceAction)
+			alert.addAction(tardinessAction)
+			alert.addAction(cancellAction)
+			
+			self.getParentViewController()?.presentViewController(alert, animated: true, completion: nil)
+		}
 	}
 }

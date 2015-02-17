@@ -38,7 +38,6 @@ class FirstViewController: UIViewController {
 	override func viewDidLayoutSubviews() {
 		self.timetableView.contentSize.width = self.timetableView.frame.width * 3 // クソ
 		self.timetableView.adjustContentsPosition() // クソ
-		self.timetableView.contentOffset.x = self.timetableView.frame.width // クソ
 	}
 	
 	override func didReceiveMemoryWarning() {
