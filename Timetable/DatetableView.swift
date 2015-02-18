@@ -47,7 +47,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	}
 	
 	func tableView(tableView: UITableView, viewForHeaderInSection section : NSInteger) -> UIView {
-		var label = UILabel(frame: CGRect(x: 0, y: 8, width: self.frame.size.width, height: self.sectionHeaderHeight - 8)) => {
+		var label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.sectionHeaderHeight)) => {
 			$0.font = .systemFontOfSize(27)
 			$0.textAlignment = .Center
 			$0.backgroundColor = UIColor.PrimaryColor

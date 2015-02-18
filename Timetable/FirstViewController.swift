@@ -126,25 +126,28 @@ class FirstViewController: UIViewController {
 		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
 			let wday = currentTableView.date!.weekday()
 			var session = sessions[wday - 1][period]
-			
-			let absenceAction = UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
+
+			var alert = UIAlertController(title: session!.subject.title, message: nil, preferredStyle: .ActionSheet)
+
+			alert.addAction(UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
 				self.realm!.beginWriteTransaction()
 				session!.subject.deduction -= 1.0
 				self.realm!.commitWriteTransaction()
 				currentTableView.reloadData()
-			})
-			let tardinessAction = UIAlertAction(title: "遅刻(-0.5)", style: .Default, handler: { (action: UIAlertAction!) in
+			}))
+
+			alert.addAction(UIAlertAction(title: "遅刻(-0.5)", style: .Default, handler: { (action: UIAlertAction!) in
 				self.realm!.beginWriteTransaction()
 				session!.subject.deduction -= 0.5
 				self.realm!.commitWriteTransaction()
 				currentTableView.reloadData()
-			})
-			let cancellAction = UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil)
+			}))
 			
-			var alert = UIAlertController(title: session!.subject.title, message: "明日は頑張ろう", preferredStyle: .ActionSheet)
-			alert.addAction(absenceAction)
-			alert.addAction(tardinessAction)
-			alert.addAction(cancellAction)
+			alert.addAction(UIAlertAction(title: "設定", style: .Default, handler: { (action: UIAlertAction!) in
+				
+			}))
+			
+			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
 			
 			self.presentViewController(alert, animated: true, completion: nil)
 		}
