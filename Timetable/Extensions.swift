@@ -36,7 +36,7 @@ let CALENDAR = NSCalendar(identifier: NSGregorianCalendar)!
 
 extension NSDate {
 	func succ(unit : NSCalendarUnit, value : Int) -> NSDate? {
-		return CALENDAR.dateByAddingUnit(.DayCalendarUnit, value: value, toDate: self, options: nil)
+		return CALENDAR.dateByAddingUnit(unit, value: value, toDate: self, options: nil)
 	}
 
 	func weekday() -> Int {

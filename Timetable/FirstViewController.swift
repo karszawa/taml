@@ -19,6 +19,7 @@ let SUB_COLOR4 = UIColor(red: 245/255, green: 248/255, blue: 250/255, alpha: 1.0
 class FirstViewController: UIViewController {
 	@IBOutlet weak var timetableView: PersistScrollView!
 	var realm : RLMRealm?
+	var sessions = [[Session?]](count: 7, repeatedValue: [])
 	
 	var exceptSubjects = [ "中国語", "フランス語" ]
 	
@@ -29,21 +30,34 @@ class FirstViewController: UIViewController {
 		
 		realm = RLMRealm.defaultRealm()
 		
+		realm!.beginWriteTransaction()
+		realm!.deleteObjects(Session.allObjects())
+		realm!.commitWriteTransaction()
+		
 		if Session.allObjects().count == 0 {
 			if let url = NSURL(string: "http://www.akashi.ac.jp/data/timetable/timetable201410.xml") {
 				self.loadFromWeb(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
 			}
 		}
 		
-		self.timetableView.pageGenerator = {
-			self.dateView(TODAY.succ(.DayCalendarUnit, value: $0)!)
+		for rlmobject in Session.allObjects() {
+			let session = rlmobject as Session
+			while sessions[session.day - 1].count < session.period {
+				sessions[session.day - 1].append(nil)
+			}
+			
+			sessions[session.day - 1][session.period - 1] = session
 		}
+		
+		self.timetableView.pageGenerator = {
+			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
+			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1])
+		}
+		
+		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {
+			$0.minimumPressDuration = 1.0;
+		})
 	}
-
-//	override func viewDidLayoutSubviews() {
-////		self.timetableView.contentSize.width = self.timetableView.frame.width * 3 // クソ
-////		self.timetableView.adjustContentsPosition() // クソ
-//	}
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
@@ -56,10 +70,6 @@ class FirstViewController: UIViewController {
 	override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
 	}
-
-	func dateView(date : NSDate) -> UIView {
-		return DateTableView.instance(date, sessions: Session.objectsWhere("day = \(date.weekday() - 1)"))
-	}
 	
 	func loadFromWeb(url : NSURL, myGrade : Int, myDepartment : String, myCourse : String?) {
 		let xml = SWXMLHash.parse(NSData(contentsOfURL: url)!)
@@ -68,12 +78,12 @@ class FirstViewController: UIViewController {
 			let name = lecture["Name"].element?.text
 			var grade = lecture["Grade"].element?.text?.toInt()
 			let department = lecture["Department"].element!.text!
-			let wday = lecture["Wday"].element!.text!.toInt()!
+			let wday = lecture["Wday"].element!.text!.toInt()! + 1
 			let location = lecture["Location"].element?.text
 			let course = lecture["Course"].element?.text
 			let startTime = lecture["StartTime"].element?.text
 			let endTime = lecture["EndTime"].element?.text
-			
+
 			if contains(exceptSubjects, { $0 == name }) {
 				continue
 			}
@@ -100,11 +110,6 @@ class FirstViewController: UIViewController {
 		}
 	}
 	
-	func longPressed(sender: UILongPressGestureRecognizer) {
-		println("longPressed in Controller")
-	}
-	
-	
 	func realmSetSchema() {
 		RLMRealm.setSchemaVersion(6, forRealmAtPath: RLMRealm.defaultRealmPath(),
 			withMigrationBlock: { migration, oldSchemaVersion in
@@ -114,5 +119,39 @@ class FirstViewController: UIViewController {
 					}
 				}
 		})
+	}
+	
+	func longPressed(sender: UILongPressGestureRecognizer) {
+		if sender.state != UIGestureRecognizerState.Began {
+			return
+		}
+		
+		let currentTableView = self.timetableView.currentView as DateTableView
+		let point = sender.locationInView(currentTableView)
+		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
+			let wday = currentTableView.date!.weekday()
+			var session = sessions[wday - 1][period]
+			
+			let absenceAction = UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
+				self.realm!.beginWriteTransaction()
+				session!.subject.deduction -= 1.0
+				self.realm!.commitWriteTransaction()
+				currentTableView.reloadData()
+			})
+			let tardinessAction = UIAlertAction(title: "遅刻(-0.5)", style: .Default, handler: { (action: UIAlertAction!) in
+				self.realm!.beginWriteTransaction()
+				session!.subject.deduction -= 0.5
+				self.realm!.commitWriteTransaction()
+				currentTableView.reloadData()
+			})
+			let cancellAction = UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil)
+			
+			var alert = UIAlertController(title: session!.subject.title, message: "明日は頑張ろう", preferredStyle: .ActionSheet)
+			alert.addAction(absenceAction)
+			alert.addAction(tardinessAction)
+			alert.addAction(cancellAction)
+			
+			self.presentViewController(alert, animated: true, completion: nil)
+		}
 	}
 }

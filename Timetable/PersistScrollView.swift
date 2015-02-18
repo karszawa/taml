@@ -17,6 +17,9 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 	}
 	
 	var currentPageNumber = 0
+	var currentView : UIView {
+		return self.subviews[1] as UIView
+	}
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -29,13 +32,11 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 	func scrollViewDidScroll(scrollView: UIScrollView) {
 		let displacement = scrollView.contentOffset.x / frame.width - 1
 		
-		if abs(displacement) < 1 {
-			return
+		if abs(displacement) >= 1 {
+			self.currentPageNumber += Int(displacement)
+			self.adjustContentsPosition()
+			self.contentOffset.x = frame.width
 		}
-		
-		self.currentPageNumber += Int(displacement)
-		self.adjustContentsPosition()
-		self.contentOffset.x = frame.width
 	}
 	
 	func adjustContentsPosition() {
@@ -44,7 +45,7 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		}
 		
 		for i in 0...2 {
-			var newPage = pageGenerator!(currentPageNumber + i) as DateTableView => {
+			let newPage = pageGenerator!(currentPageNumber + i - 1) as DateTableView => {
 				$0.frame.size = self.frame.size
 				$0.frame.origin.x = self.frame.width * CGFloat(i)
 			}
@@ -55,8 +56,12 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 	
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		
-		self.contentSize.width = self.frame.width * 3
-		self.adjustContentsPosition()
+
+		// if resised
+		if self.contentSize.width != self.frame.width * 3 {
+			self.contentSize.width = self.frame.width * 3
+			self.contentOffset.x = self.frame.width
+			self.adjustContentsPosition()
+		}
 	}
 }
