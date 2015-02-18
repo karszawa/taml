@@ -10,11 +10,6 @@ import UIKit
 import Realm
 
 let TODAY = NSDate()
-let PRIMARY_COLOR = UIColor(red: 85.0/255, green: 172.0/255, blue: 238.0/255, alpha: 1.0)
-let SUB_COLOR1 = UIColor(red: 102/255, green: 117/255, blue: 127/255, alpha: 1.0)
-let SUB_COLOR2 = UIColor(red: 153/255, green: 170/255, blue: 181/255, alpha: 1.0)
-let SUB_COLOR3 = UIColor(red: 204/255, green: 214/255, blue: 221/255, alpha: 1.0)
-let SUB_COLOR4 = UIColor(red: 245/255, green: 248/255, blue: 250/255, alpha: 1.0)
 
 class FirstViewController: UIViewController {
 	@IBOutlet weak var timetableView: PersistScrollView!

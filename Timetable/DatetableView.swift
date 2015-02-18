@@ -53,8 +53,8 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		var label = UILabel(frame: CGRect(x: 0, y: 8, width: self.frame.size.width, height: self.sectionHeaderHeight - 8)) => {
 			$0.font = .systemFontOfSize(27)
 			$0.textAlignment = .Center
-			$0.backgroundColor = PRIMARY_COLOR
-			$0.textColor = SUB_COLOR4
+			$0.backgroundColor = UIColor.PrimaryColor
+			$0.textColor = UIColor.SubColor4
 		}
 		
 		if self.date == TODAY {
@@ -66,7 +66,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		}
 		
 		return UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.sectionHeaderHeight)) => {
-			$0.backgroundColor = PRIMARY_COLOR
+			$0.backgroundColor = UIColor.PrimaryColor
 			$0.addSubview(label)
 		}
 	}

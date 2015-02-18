@@ -30,7 +30,7 @@ class SubjectCell: UITableViewCell {
 	}
 	
 	override func setHighlighted(highlighted: Bool, animated: Bool) {
-		self.backgroundColor = (highlighted ? SUB_COLOR3 : UIColor.whiteColor())
+		self.backgroundColor = (highlighted ? UIColor.SubColor3 : UIColor.whiteColor())
 	}
 
 	func layoutMargins() -> UIEdgeInsets {
