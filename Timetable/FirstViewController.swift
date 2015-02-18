@@ -144,7 +144,12 @@ class FirstViewController: UIViewController {
 			}))
 			
 			alert.addAction(UIAlertAction(title: "設定", style: .Default, handler: { (action: UIAlertAction!) in
+				let sessionSettingController: UIViewController = SecondViewController()
 				
+				sessionSettingController.modalTransitionStyle = UIModalTransitionStyle.PartialCurl
+				
+				self.presentViewController(sessionSettingController, animated: true, completion: nil)
+
 			}))
 			
 			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
