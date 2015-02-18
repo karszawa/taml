@@ -10,9 +10,6 @@ import Foundation
 import UIKit
 import Realm
 
-let JWEEKDAYS = [ "", "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日" ]
-let MONTHS = [ "", "Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec." ]
-
 class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	var date : NSDate?
 	var sessions : [Session?] = []
@@ -62,7 +59,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		} else if self.date == TODAY.succ(.DayCalendarUnit, value: 1) {
 			label.text = "明日"
 		} else {
-			label.text = "\(self.date!.month())月\(self.date!.day())日 " + JWEEKDAYS[self.date!.weekday()]
+			label.text = "\(self.date!.month())月\(self.date!.day())日 " + NSCalendar.weekdays[self.date!.weekday()]
 		}
 		
 		return UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.sectionHeaderHeight)) => {

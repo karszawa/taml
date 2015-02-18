@@ -59,3 +59,8 @@ extension UIColor {
 	class var SubColor3 : UIColor { return UIColor(red: 204/255, green: 214/255, blue: 221/255, alpha: 1.0) }
 	class var SubColor4 : UIColor { return UIColor(red: 245/255, green: 248/255, blue: 250/255, alpha: 1.0) }
 }
+
+extension NSCalendar {
+	class var weekdays : [String] { return [ "", "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日" ] }
+	class var Months : [String] { return [ "", "Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec." ] }
+}
