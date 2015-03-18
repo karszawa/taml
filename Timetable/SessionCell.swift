@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SubjectCell: UITableViewCell {
+class SessionCell: UITableViewCell {
 	@IBOutlet weak var periodLabelView: UILabel!
 	@IBOutlet weak var locationLabelView: UILabel!
 	@IBOutlet weak var titleLabelView: UILabel!
@@ -27,8 +27,8 @@ class SubjectCell: UITableViewCell {
 		}
 	}
 	
-	class func instance(session : Session?) -> SubjectCell {
-		return UINib(nibName: "SubjectCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SubjectCell => {
+	class func instance(session : Session?) -> SessionCell {
+		return UINib(nibName: "SessionCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SessionCell => {
 			$0.session = session
 		}
 	}

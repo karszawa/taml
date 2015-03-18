@@ -11,8 +11,8 @@
 		A001E6FD1A92FEDF009F712F /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FC1A92FEDF009F712F /* Realm.framework */; };
 		A001E6FF1A92FF09009F712F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FE1A92FF09009F712F /* libc++.dylib */; };
 		A001E7011A9316DC009F712F /* TimeToPeriod.plist in Resources */ = {isa = PBXBuildFile; fileRef = A001E7001A9316DC009F712F /* TimeToPeriod.plist */; };
-		A03890231A8DF71B006FFC51 /* SubjectCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A03890221A8DF71B006FFC51 /* SubjectCell.xib */; };
-		A038902B1A8DFC64006FFC51 /* SubjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A038902A1A8DFC64006FFC51 /* SubjectCell.swift */; };
+		A03890231A8DF71B006FFC51 /* SessionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A03890221A8DF71B006FFC51 /* SessionCell.xib */; };
+		A038902B1A8DFC64006FFC51 /* SessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A038902A1A8DFC64006FFC51 /* SessionCell.swift */; };
 		A04CCE8F1A8F459A00C65317 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04CCE8E1A8F459A00C65317 /* Extensions.swift */; };
 		A0742BDA1A8A062E005C9174 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0742BD91A8A062E005C9174 /* AppDelegate.swift */; };
 		A0742BDC1A8A062E005C9174 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0742BDB1A8A062E005C9174 /* FirstViewController.swift */; };
@@ -42,8 +42,8 @@
 		A001E6FC1A92FEDF009F712F /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		A001E6FE1A92FF09009F712F /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		A001E7001A9316DC009F712F /* TimeToPeriod.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TimeToPeriod.plist; sourceTree = "<group>"; };
-		A03890221A8DF71B006FFC51 /* SubjectCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubjectCell.xib; sourceTree = "<group>"; };
-		A038902A1A8DFC64006FFC51 /* SubjectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubjectCell.swift; sourceTree = "<group>"; };
+		A03890221A8DF71B006FFC51 /* SessionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SessionCell.xib; sourceTree = "<group>"; };
+		A038902A1A8DFC64006FFC51 /* SessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCell.swift; sourceTree = "<group>"; };
 		A04CCE8E1A8F459A00C65317 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A0742BD41A8A062E005C9174 /* Timetable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timetable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0742BD81A8A062E005C9174 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -91,7 +91,7 @@
 				A0742BDD1A8A062E005C9174 /* SecondViewController.swift */,
 				A0742BFC1A8A0675005C9174 /* PersistScrollView.swift */,
 				A0742BFB1A8A0675005C9174 /* DateTableView.swift */,
-				A038902A1A8DFC64006FFC51 /* SubjectCell.swift */,
+				A038902A1A8DFC64006FFC51 /* SessionCell.swift */,
 				A0742BFD1A8A0675005C9174 /* Subject.swift */,
 				A0742C051A8A06EB005C9174 /* SWXMLHash.swift */,
 				A04CCE8E1A8F459A00C65317 /* Extensions.swift */,
@@ -103,7 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				A0742BDF1A8A062E005C9174 /* Main.storyboard */,
-				A03890221A8DF71B006FFC51 /* SubjectCell.xib */,
+				A03890221A8DF71B006FFC51 /* SessionCell.xib */,
 				A0D2E92A1A8E2F7A0026EB1D /* DateTableView.xib */,
 			);
 			name = UI;
@@ -249,7 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A001E7011A9316DC009F712F /* TimeToPeriod.plist in Resources */,
-				A03890231A8DF71B006FFC51 /* SubjectCell.xib in Resources */,
+				A03890231A8DF71B006FFC51 /* SessionCell.xib in Resources */,
 				A0742BE11A8A062E005C9174 /* Main.storyboard in Resources */,
 				A0742BE31A8A062E005C9174 /* Images.xcassets in Resources */,
 				A0D2E92B1A8E2F7A0026EB1D /* DateTableView.xib in Resources */,
@@ -274,7 +274,7 @@
 				A04CCE8F1A8F459A00C65317 /* Extensions.swift in Sources */,
 				A0742BDA1A8A062E005C9174 /* AppDelegate.swift in Sources */,
 				A0742BDC1A8A062E005C9174 /* FirstViewController.swift in Sources */,
-				A038902B1A8DFC64006FFC51 /* SubjectCell.swift in Sources */,
+				A038902B1A8DFC64006FFC51 /* SessionCell.swift in Sources */,
 				A0742C011A8A0675005C9174 /* PersistScrollView.swift in Sources */,
 				A0742C021A8A0675005C9174 /* Subject.swift in Sources */,
 				A001E6FB1A92FEA3009F712F /* RLMSupport.swift in Sources */,

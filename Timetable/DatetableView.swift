@@ -40,7 +40,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		if indexPath.row < self.sessions.count {
-			return SubjectCell.instance(self.sessions[indexPath.row])
+			return SessionCell.instance(self.sessions[indexPath.row])
 		} else {
 			return UITableViewCell()
 		}
