@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14D105g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -44,14 +44,12 @@
                     <constraint firstItem="n4w-vS-dv5" firstAttribute="centerY" secondItem="dDY-bq-kyt" secondAttribute="centerY" id="4QB-Lg-9qs"/>
                     <constraint firstItem="n4w-vS-dv5" firstAttribute="leading" secondItem="EpL-Fe-RgY" secondAttribute="leadingMargin" id="DeI-Yt-8j0"/>
                     <constraint firstItem="dDY-bq-kyt" firstAttribute="bottom" secondItem="EpL-Fe-RgY" secondAttribute="bottomMargin" id="Dfv-C2-NNE"/>
-                    <constraint firstItem="n4w-vS-dv5" firstAttribute="top" secondItem="bE6-M1-J7c" secondAttribute="bottom" constant="7" id="FSo-IG-1KV"/>
                     <constraint firstItem="dDY-bq-kyt" firstAttribute="top" secondItem="EL5-ae-rLN" secondAttribute="bottom" constant="7" id="IYL-T8-fU9"/>
                     <constraint firstItem="n4w-vS-dv5" firstAttribute="bottom" secondItem="EpL-Fe-RgY" secondAttribute="bottomMargin" id="In5-rk-j0F"/>
-                    <constraint firstItem="n4w-vS-dv5" firstAttribute="top" secondItem="EL5-ae-rLN" secondAttribute="bottom" constant="7" id="VDH-6s-fm9"/>
                     <constraint firstItem="bE6-M1-J7c" firstAttribute="leading" secondItem="EpL-Fe-RgY" secondAttribute="leadingMargin" id="avS-kd-bEM"/>
                     <constraint firstItem="EL5-ae-rLN" firstAttribute="top" secondItem="EpL-Fe-RgY" secondAttribute="topMargin" id="hwT-cC-hgb"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="EL5-ae-rLN" secondAttribute="trailing" constant="8" id="jzX-Jn-0ut"/>
                     <constraint firstItem="EL5-ae-rLN" firstAttribute="top" secondItem="bE6-M1-J7c" secondAttribute="top" id="key-eF-r7D"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="EL5-ae-rLN" secondAttribute="trailing" constant="8" id="tMn-cc-Cl4"/>
                     <constraint firstItem="EL5-ae-rLN" firstAttribute="top" secondItem="EpL-Fe-RgY" secondAttribute="topMargin" id="vYv-im-2Ji"/>
                     <constraint firstItem="dDY-bq-kyt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="n4w-vS-dv5" secondAttribute="trailing" constant="10" id="x25-Zf-8Y4"/>
                 </constraints>

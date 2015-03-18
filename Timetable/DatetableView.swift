@@ -39,10 +39,10 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		if let session = sessions[indexPath.row] {
-			return SubjectCell.instance(session)
+		if indexPath.row < self.sessions.count {
+			return SubjectCell.instance(self.sessions[indexPath.row])
 		} else {
-			return tableView.cellForRowAtIndexPath(indexPath) ?? UITableViewCell()
+			return UITableViewCell()
 		}
 	}
 	
@@ -58,6 +58,8 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 			label.text = "今日"
 		} else if self.date == TODAY.succ(.DayCalendarUnit, value: 1) {
 			label.text = "明日"
+		} else if self.date == TODAY.succ(.DayCalendarUnit, value: -1) {
+			label.text = "昨日"
 		} else {
 			label.text = "\(self.date!.month())月\(self.date!.day())日 " + NSCalendar.weekdays[self.date!.weekday()]
 		}

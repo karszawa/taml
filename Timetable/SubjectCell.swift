@@ -19,11 +19,15 @@ class SubjectCell: UITableViewCell {
 			self.periodLabelView.text = self.session.map { $0.period.description + "限" }
 			self.locationLabelView.text = self.session?.subject.location
 			self.titleLabelView.text = self.session?.subject.title
-			self.deductionLabelView.text = self.session?.subject.deduction.description
+			if let d = self.session?.subject.deduction {
+				self.deductionLabelView.text = (d == 0 ? "" : d.description)
+			} else {
+				self.deductionLabelView.text = ""
+			}
 		}
 	}
 	
-	class func instance(session : Session) -> SubjectCell {
+	class func instance(session : Session?) -> SubjectCell {
 		return UINib(nibName: "SubjectCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SubjectCell => {
 			$0.session = session
 		}

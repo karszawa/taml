@@ -110,7 +110,9 @@ class FirstViewController: UIViewController {
 			withMigrationBlock: { migration, oldSchemaVersion in
 				migration.enumerateObjects(Session.className()) { oldObject, newObject in
 					if oldSchemaVersion < 6 {
-						
+						self.realm!.transactionWithBlock() {
+							self.realm!.addOrUpdateObject(Subject(title: "", location: "", deduction: 0))
+						}
 					}
 				}
 		})
@@ -126,6 +128,10 @@ class FirstViewController: UIViewController {
 		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
 			let wday = currentTableView.date!.weekday()
 			var session = sessions[wday - 1][period]
+			
+			if session?.subject.title == "" {
+				return
+			}
 
 			var alert = UIAlertController(title: session!.subject.title, message: nil, preferredStyle: .ActionSheet)
 
@@ -143,13 +149,15 @@ class FirstViewController: UIViewController {
 				currentTableView.reloadData()
 			}))
 			
-			alert.addAction(UIAlertAction(title: "設定", style: .Default, handler: { (action: UIAlertAction!) in
-				let sessionSettingController: UIViewController = SecondViewController()
-				
-				sessionSettingController.modalTransitionStyle = UIModalTransitionStyle.PartialCurl
-				
-				self.presentViewController(sessionSettingController, animated: true, completion: nil)
-
+			alert.addAction(UIAlertAction(title: "履修取消", style: .Default, handler: { (action: UIAlertAction!) in
+				self.realm!.transactionWithBlock() {
+					for var s = period+1; s < self.sessions[wday - 1].count; s++ {
+						self.sessions[wday - 1][s-1]!.subject = self.sessions[wday - 1][s]!.subject
+					}
+					
+					self.sessions[wday - 1].removeLast()
+				}
+				currentTableView.reloadData()
 			}))
 			
 			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
