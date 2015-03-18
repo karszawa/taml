@@ -24,6 +24,8 @@
 		A0742C011A8A0675005C9174 /* PersistScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0742BFC1A8A0675005C9174 /* PersistScrollView.swift */; };
 		A0742C021A8A0675005C9174 /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0742BFD1A8A0675005C9174 /* Subject.swift */; };
 		A0742C061A8A06EB005C9174 /* SWXMLHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0742C051A8A06EB005C9174 /* SWXMLHash.swift */; };
+		A0A471571ABA0647008A2418 /* EdititableSessionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0A471561ABA0647008A2418 /* EdititableSessionCell.xib */; };
+		A0A471591ABA0868008A2418 /* AddSessionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0A471581ABA0868008A2418 /* AddSessionCell.xib */; };
 		A0D2E92B1A8E2F7A0026EB1D /* DateTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0D2E92A1A8E2F7A0026EB1D /* DateTableView.xib */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +62,8 @@
 		A0742BFD1A8A0675005C9174 /* Subject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
 		A0742C051A8A06EB005C9174 /* SWXMLHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWXMLHash.swift; sourceTree = "<group>"; };
 		A0742C071A8A198B005C9174 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		A0A471561ABA0647008A2418 /* EdititableSessionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EdititableSessionCell.xib; sourceTree = "<group>"; };
+		A0A471581ABA0868008A2418 /* AddSessionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddSessionCell.xib; sourceTree = "<group>"; };
 		A0D2E92A1A8E2F7A0026EB1D /* DateTableView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTableView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,6 +109,8 @@
 				A0742BDF1A8A062E005C9174 /* Main.storyboard */,
 				A03890221A8DF71B006FFC51 /* SessionCell.xib */,
 				A0D2E92A1A8E2F7A0026EB1D /* DateTableView.xib */,
+				A0A471561ABA0647008A2418 /* EdititableSessionCell.xib */,
+				A0A471581ABA0868008A2418 /* AddSessionCell.xib */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -251,8 +257,10 @@
 				A001E7011A9316DC009F712F /* TimeToPeriod.plist in Resources */,
 				A03890231A8DF71B006FFC51 /* SessionCell.xib in Resources */,
 				A0742BE11A8A062E005C9174 /* Main.storyboard in Resources */,
+				A0A471591ABA0868008A2418 /* AddSessionCell.xib in Resources */,
 				A0742BE31A8A062E005C9174 /* Images.xcassets in Resources */,
 				A0D2E92B1A8E2F7A0026EB1D /* DateTableView.xib in Resources */,
+				A0A471571ABA0647008A2418 /* EdititableSessionCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
