@@ -11,6 +11,7 @@
 		A001E6FD1A92FEDF009F712F /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FC1A92FEDF009F712F /* Realm.framework */; };
 		A001E6FF1A92FF09009F712F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FE1A92FF09009F712F /* libc++.dylib */; };
 		A001E7011A9316DC009F712F /* TimeToPeriod.plist in Resources */ = {isa = PBXBuildFile; fileRef = A001E7001A9316DC009F712F /* TimeToPeriod.plist */; };
+		A02A6F711ABAB0410046A068 /* EditableSessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02A6F701ABAB0410046A068 /* EditableSessionCell.swift */; };
 		A03890231A8DF71B006FFC51 /* SessionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A03890221A8DF71B006FFC51 /* SessionCell.xib */; };
 		A038902B1A8DFC64006FFC51 /* SessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A038902A1A8DFC64006FFC51 /* SessionCell.swift */; };
 		A04CCE8F1A8F459A00C65317 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04CCE8E1A8F459A00C65317 /* Extensions.swift */; };
@@ -44,6 +45,7 @@
 		A001E6FC1A92FEDF009F712F /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		A001E6FE1A92FF09009F712F /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		A001E7001A9316DC009F712F /* TimeToPeriod.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TimeToPeriod.plist; sourceTree = "<group>"; };
+		A02A6F701ABAB0410046A068 /* EditableSessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableSessionCell.swift; sourceTree = "<group>"; };
 		A03890221A8DF71B006FFC51 /* SessionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SessionCell.xib; sourceTree = "<group>"; };
 		A038902A1A8DFC64006FFC51 /* SessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCell.swift; sourceTree = "<group>"; };
 		A04CCE8E1A8F459A00C65317 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 				A0742BFC1A8A0675005C9174 /* PersistScrollView.swift */,
 				A0742BFB1A8A0675005C9174 /* DateTableView.swift */,
 				A038902A1A8DFC64006FFC51 /* SessionCell.swift */,
+				A02A6F701ABAB0410046A068 /* EditableSessionCell.swift */,
 				A0742BFD1A8A0675005C9174 /* Subject.swift */,
 				A0742C051A8A06EB005C9174 /* SWXMLHash.swift */,
 				A04CCE8E1A8F459A00C65317 /* Extensions.swift */,
@@ -278,6 +281,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A02A6F711ABAB0410046A068 /* EditableSessionCell.swift in Sources */,
 				A0742BDE1A8A062E005C9174 /* SecondViewController.swift in Sources */,
 				A04CCE8F1A8F459A00C65317 /* Extensions.swift in Sources */,
 				A0742BDA1A8A062E005C9174 /* AppDelegate.swift in Sources */,

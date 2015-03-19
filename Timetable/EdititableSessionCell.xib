@@ -14,60 +14,57 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1限" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4o8-RH-a4H">
-                        <rect key="frame" x="8" y="9" width="27" height="21"/>
+                        <rect key="frame" x="8" y="11" width="27" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.40000000000000002" green="0.45882352939999999" blue="0.49803921569999998" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="データ構造とアルゴリズム" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BIt-tj-941">
-                        <rect key="frame" x="50" y="42" width="324" height="33"/>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="データ構造とアルゴリズム" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8j5-4v-Hbg">
+                        <rect key="frame" x="46" y="36" width="328" height="33"/>
                         <fontDescription key="fontDescription" type="system" pointSize="27"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="情報メディアセンター第4演習室" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Vx-Xq-XS1">
-                        <rect key="frame" x="336" y="9" width="248" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="情報メディアセンター第4演習室" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FsA-XE-SPe">
+                        <rect key="frame" x="340" y="8" width="252" height="21"/>
                         <color key="textColor" red="0.40000000000000002" green="0.45882352939999999" blue="0.49803921569999998" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="blackTranslucent" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gQ-C4-W07">
-                        <rect key="frame" x="-2" y="37" width="46" height="44"/>
-                        <items>
-                            <barButtonItem systemItem="stop" id="mW4-oF-qVO">
-                                <color key="tintColor" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
-                            </barButtonItem>
-                        </items>
-                    </toolbar>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-15.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4v-Ic-iBK">
-                        <rect key="frame" x="530" y="42" width="62" height="33"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="-15.0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DTp-L0-f8b">
+                        <rect key="frame" x="526" y="36" width="66" height="33"/>
                         <color key="textColor" red="0.33333333329999998" green="0.67450980390000004" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                        <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3xT-D0-ngX">
+                        <rect key="frame" x="8" y="30" width="30" height="45"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                        <state key="normal" title="Ｘ">
+                            <color key="titleColor" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="4o8-RH-a4H" firstAttribute="top" secondItem="Ng7-P9-vZk" secondAttribute="topMargin" constant="1" id="0Eg-yb-sKr"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="K4v-Ic-iBK" secondAttribute="bottom" constant="-6" id="1bh-20-Lld"/>
-                    <constraint firstItem="K4v-Ic-iBK" firstAttribute="trailing" secondItem="Ng7-P9-vZk" secondAttribute="trailingMargin" id="Aa2-Jc-oyd"/>
-                    <constraint firstItem="2Vx-Xq-XS1" firstAttribute="top" secondItem="Ng7-P9-vZk" secondAttribute="topMargin" constant="1" id="CO9-8t-pWH"/>
-                    <constraint firstItem="BIt-tj-941" firstAttribute="leading" secondItem="0gQ-C4-W07" secondAttribute="trailing" constant="6" id="EyP-CX-9Od"/>
-                    <constraint firstItem="0gQ-C4-W07" firstAttribute="leading" secondItem="Ng7-P9-vZk" secondAttribute="leadingMargin" constant="-10" id="Mna-BK-3xh"/>
+                    <constraint firstItem="8j5-4v-Hbg" firstAttribute="bottom" secondItem="Ng7-P9-vZk" secondAttribute="bottomMargin" id="BHK-7f-OEn"/>
+                    <constraint firstItem="8j5-4v-Hbg" firstAttribute="leading" secondItem="3xT-D0-ngX" secondAttribute="trailing" constant="8" id="FAC-mV-Oi0"/>
                     <constraint firstItem="4o8-RH-a4H" firstAttribute="leading" secondItem="Ng7-P9-vZk" secondAttribute="leadingMargin" id="PFW-K9-pRo"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="2Vx-Xq-XS1" secondAttribute="trailing" constant="8" id="PTh-WS-zPX"/>
-                    <constraint firstItem="K4v-Ic-iBK" firstAttribute="centerY" secondItem="BIt-tj-941" secondAttribute="centerY" id="bhl-4g-kOo"/>
-                    <constraint firstItem="0gQ-C4-W07" firstAttribute="centerY" secondItem="BIt-tj-941" secondAttribute="centerY" constant="0.5" id="qLn-6b-RWe"/>
-                    <constraint firstItem="0gQ-C4-W07" firstAttribute="centerX" secondItem="4o8-RH-a4H" secondAttribute="centerX" id="tUA-bV-qSM"/>
-                    <constraint firstItem="K4v-Ic-iBK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="BIt-tj-941" secondAttribute="trailing" constant="10" id="to1-a8-52C"/>
+                    <constraint firstItem="3xT-D0-ngX" firstAttribute="centerY" secondItem="8j5-4v-Hbg" secondAttribute="centerY" id="PbB-aO-HZ5"/>
+                    <constraint firstItem="DTp-L0-f8b" firstAttribute="bottom" secondItem="Ng7-P9-vZk" secondAttribute="bottomMargin" id="Rz9-3c-SsF"/>
+                    <constraint firstItem="FsA-XE-SPe" firstAttribute="top" secondItem="Ng7-P9-vZk" secondAttribute="topMargin" id="Svm-bD-RVs"/>
+                    <constraint firstItem="4o8-RH-a4H" firstAttribute="top" secondItem="Ng7-P9-vZk" secondAttribute="topMargin" constant="3" id="TBO-m3-ESa"/>
+                    <constraint firstItem="FsA-XE-SPe" firstAttribute="trailing" secondItem="Ng7-P9-vZk" secondAttribute="trailingMargin" id="hmd-CC-jzf"/>
+                    <constraint firstItem="3xT-D0-ngX" firstAttribute="leading" secondItem="Ng7-P9-vZk" secondAttribute="leadingMargin" id="taZ-CK-IXv"/>
+                    <constraint firstItem="DTp-L0-f8b" firstAttribute="trailing" secondItem="Ng7-P9-vZk" secondAttribute="trailingMargin" id="vFB-5A-heY"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="deductionLabelView" destination="K4v-Ic-iBK" id="Mpi-6J-ubG"/>
-                <outlet property="locationLabelView" destination="2Vx-Xq-XS1" id="3Ec-BD-IQn"/>
-                <outlet property="periodLabelView" destination="4o8-RH-a4H" id="0Nz-SL-XeA"/>
-                <outlet property="titleLabelView" destination="BIt-tj-941" id="rh6-wx-tXD"/>
+                <outlet property="deductionTextField" destination="DTp-L0-f8b" id="K8O-va-k7u"/>
+                <outlet property="deleteButton" destination="3xT-D0-ngX" id="CGS-bv-lDs"/>
+                <outlet property="locationTextField" destination="FsA-XE-SPe" id="xac-mS-b2e"/>
+                <outlet property="periodLabelView" destination="4o8-RH-a4H" id="ANC-WF-0VZ"/>
+                <outlet property="titleTextField" destination="8j5-4v-Hbg" id="TWM-s2-Ou0"/>
             </connections>
-            <point key="canvasLocation" x="594" y="148"/>
+            <point key="canvasLocation" x="594" y="142"/>
         </tableViewCell>
     </objects>
 </document>
