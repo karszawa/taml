@@ -11,7 +11,7 @@ import Realm
 
 let TODAY = NSDate()
 
-class FirstViewController: UIViewController {
+class FirstViewController: UIViewController, UITextFieldDelegate {
 	@IBOutlet weak var toolBar: UIToolbar!
 	@IBOutlet weak var messageLabelView: UILabel!
 	@IBOutlet weak var timetableView: PersistScrollView!
@@ -51,7 +51,7 @@ class FirstViewController: UIViewController {
 		
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
-			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1], editable: self.editable)
+			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1], editable: self.editable, textfieldDelegate: self)
 		}
 		
 		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {
@@ -156,8 +156,6 @@ class FirstViewController: UIViewController {
 	
 	func editButtonPushed(sender: UIButton) {
 		toolBar.items = [
-			UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelButtonPushed:"),
-			UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil),
 			UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:")
 		]
 		
@@ -165,16 +163,11 @@ class FirstViewController: UIViewController {
 		switchEditable(true)
 	}
 	
-	func cancelButtonPushed(sender: UIButton) {
+	func doneButtonPushed(sender: UIButton) {
 		toolBar.items = [
 			UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:")
 		]
 		
-		editable = false
-		switchEditable(false)
-	}
-	
-	func doneButtonPushed(sender: UIButton) {
 		editable = false
 		switchEditable(false)
 	}
@@ -184,6 +177,24 @@ class FirstViewController: UIViewController {
 			var s = subview as DateTableView
 			s.editable = b
 			s.reloadData()
+		}
+	}
+	
+	func textFieldDidEndEditing(textField : UITextField) {
+		let currentTableView = self.timetableView.currentView as DateTableView
+		for i in 0 ..< currentTableView.numberOfRowsInSection(0) - 1 {
+			println(i)
+			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as EditableSessionCell
+			
+			realm?.transactionWithBlock() {
+				var subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
+				var wday = (self.timetableView.currentView as DateTableView).date?.weekday()
+				var session = Session(day: wday!, period: i+1, subject: subject)
+				subject.sessions.addObject(session)
+
+				self.realm?.addOrUpdateObject(subject)
+				self.realm?.addOrUpdateObject(session)
+			}
 		}
 	}
 }

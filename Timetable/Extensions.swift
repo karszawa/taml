@@ -31,6 +31,11 @@ extension UIView {
 	}
 }
 
+extension String {
+	var floatValue: Float {
+		return (self as NSString).floatValue
+	}
+}
 
 let CALENDAR = NSCalendar(identifier: NSGregorianCalendar)!
 

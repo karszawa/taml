@@ -14,6 +14,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	var date : NSDate?
 	var sessions : [Session?] = []
 	var editable = false
+	var textfieldDelegate : FirstViewController?
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -26,11 +27,12 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		self.dataSource = self
 	}
 	
-	class func instance(date : NSDate, sessions : [Session?], editable : Bool) -> DateTableView {
+	class func instance(date : NSDate, sessions : [Session?], editable : Bool, textfieldDelegate : FirstViewController) -> DateTableView {
 		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as DateTableView => {
 			$0.date = date
 			$0.sessions = sessions
 			$0.editable = editable
+			$0.textfieldDelegate = textfieldDelegate
 			$0.reloadData()
 			$0.tableFooterView = UIView()
 		}
@@ -43,7 +45,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		if editable {
 			if indexPath.row < self.sessions.count {
-				return EditableSessionCell.instance(self.sessions[indexPath.row])
+				return EditableSessionCell.instance(self.sessions[indexPath.row], textfieldDelegate: textfieldDelegate!)
 			} else if indexPath.row == self.sessions.count {
 				return AddSessionCell.instance()
 			}

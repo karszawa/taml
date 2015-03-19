@@ -29,9 +29,12 @@ class EditableSessionCell : UITableViewCell {
 		}
 	}
 	
-	class func instance(session : Session?) -> EditableSessionCell {
+	class func instance(session : Session?, textfieldDelegate : FirstViewController) -> EditableSessionCell {
 		return UINib(nibName: "EditableSessionCell", bundle: nil).instantiateWithOwner(self, options: nil).first as EditableSessionCell => {
 			$0.session = session
+			$0.titleTextField.delegate = textfieldDelegate
+			$0.deductionTextField.delegate = textfieldDelegate
+			$0.locationTextField.delegate = textfieldDelegate
 		}
 	}
 	
