@@ -71,6 +71,29 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 		super.viewDidDisappear(animated)
 	}
 	
+	var isObserving = false
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		if(!isObserving) {
+			let notification = NSNotificationCenter.defaultCenter()
+			notification.addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+			notification.addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+			isObserving = true
+		}
+	}
+	
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+		if(isObserving) {
+			let notification = NSNotificationCenter.defaultCenter()
+			notification.removeObserver(self)
+			notification.removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+			notification.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+			isObserving = false
+		}
+	}
+	
 	func loadFromWeb(url : NSURL, myGrade : Int, myDepartment : String, myCourse : String?) {
 		let xml = SWXMLHash.parse(NSData(contentsOfURL: url)!)
 		
@@ -180,6 +203,24 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 		}
 	}
 	
+	var lastTouchedTextFieldY = CGFloat(0)
+	
+	func keyboardWillShow(notification: NSNotification?) {
+		let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().minY
+		let offsetY = lastTouchedTextFieldY	- min(keyboardY, lastTouchedTextFieldY)
+		
+		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
+	}
+	
+	func keyboardWillHide(notification: NSNotification?) {
+		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+	}
+	
+	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+		lastTouchedTextFieldY = textField.absPoint().y + textField.frame.height
+		return true
+	}
+	
 	func textFieldDidEndEditing(textField : UITextField) {
 		let currentTableView = self.timetableView.currentView as DateTableView
 		for i in 0 ..< currentTableView.numberOfRowsInSection(0) - 1 {
@@ -195,12 +236,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 				self.realm?.addOrUpdateObject(session)
 			}
 		}
-	}
-	
-	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-//		(self.timetableView.currentView as DateTableView)
-		
-		return true
 	}
 	
 	func textFieldShouldReturn(textField: UITextField) -> Bool {

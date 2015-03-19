@@ -29,6 +29,15 @@ extension UIView {
 			}
 		}
 	}
+	
+	func absPoint() -> CGPoint {
+		if self.superview == nil {
+			return CGPointZero
+		}
+		
+		var p = self.superview!.absPoint()
+		return CGPoint(x: self.frame.origin.x + p.x, y: self.frame.origin.y + p.y)
+	}
 }
 
 extension String {
