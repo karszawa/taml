@@ -67,13 +67,14 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		}
 		
 		if self.date == TODAY {
-			label.text = "今日"
+			label.text = "Today"
 		} else if self.date == TODAY.succ(.DayCalendarUnit, value: 1) {
-			label.text = "明日"
+			label.text = "Tomorrow"
 		} else if self.date == TODAY.succ(.DayCalendarUnit, value: -1) {
-			label.text = "昨日"
+			label.text = "Yesterday"
 		} else {
-			label.text = "\(self.date!.month())月\(self.date!.day())日 " + NSCalendar.weekdays[self.date!.weekday()]
+			label.text = "\(self.date!.month())月\(self.date!.day())日 " + NSCalendar.Weekdays[self.date!.weekday()]
+//			label.text = NSCalendar.Weekdays[self.date!.weekday()] + ", " + NSCalendar.Months[self.date!.month()] + " \(self.date!.day())"
 		}
 		
 		return UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.sectionHeaderHeight)) => {

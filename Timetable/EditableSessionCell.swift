@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+let ord = ["st", "nd", "rd", "th"]
+
 class EditableSessionCell : UITableViewCell {
 	@IBOutlet weak var deleteButton: UIButton!
 	@IBOutlet weak var titleTextField: UITextField!
@@ -18,7 +20,7 @@ class EditableSessionCell : UITableViewCell {
 	
 	var session : Session? {
 		didSet {
-			self.periodLabelView.text = self.session.map { $0.period.description + "限" }
+			self.periodLabelView.text = self.session.map { $0.period.description + "限" } //ord[min($0.period-1, 3)] + " period" }
 			self.locationTextField.text = self.session?.subject.location
 			self.titleTextField.text = self.session?.subject.title
 			if let d = self.session?.subject.deduction {

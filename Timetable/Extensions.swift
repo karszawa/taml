@@ -66,6 +66,7 @@ extension UIColor {
 }
 
 extension NSCalendar {
-	class var weekdays : [String] { return [ "", "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日" ] }
+	class var Weekdays : [String] { return [ "", "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日" ] }
+	//class var Weekdays : [String] { return [ "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ] }
 	class var Months : [String] { return [ "", "Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec." ] }
 }

@@ -183,7 +183,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 	func textFieldDidEndEditing(textField : UITextField) {
 		let currentTableView = self.timetableView.currentView as DateTableView
 		for i in 0 ..< currentTableView.numberOfRowsInSection(0) - 1 {
-			println(i)
 			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as EditableSessionCell
 			
 			realm?.transactionWithBlock() {
@@ -196,5 +195,16 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 				self.realm?.addOrUpdateObject(session)
 			}
 		}
+	}
+	
+	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+//		(self.timetableView.currentView as DateTableView)
+		
+		return true
+	}
+	
+	func textFieldShouldReturn(textField: UITextField) -> Bool {
+		textField.resignFirstResponder()
+		return false
 	}
 }
