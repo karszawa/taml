@@ -35,4 +35,7 @@ class EditableSessionCell : UITableViewCell {
 		}
 	}
 	
+	func layoutMargins() -> UIEdgeInsets {
+		return UIEdgeInsetsZero
+	}	
 }

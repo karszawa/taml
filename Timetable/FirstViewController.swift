@@ -12,15 +12,16 @@ import Realm
 let TODAY = NSDate()
 
 class FirstViewController: UIViewController {
+	@IBOutlet weak var toolBar: UIToolbar!
+	@IBOutlet weak var messageLabelView: UILabel!
 	@IBOutlet weak var timetableView: PersistScrollView!
 	var realm : RLMRealm?
 	var sessions = [[Session?]](count: 7, repeatedValue: [])
-	
-	var exceptSubjects = [ "中国語", "フランス語" ]
+	var editable = false
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+		
 		realmSetSchema()
 		
 		realm = RLMRealm.defaultRealm()
@@ -44,9 +45,13 @@ class FirstViewController: UIViewController {
 			sessions[session.day - 1][session.period - 1] = session
 		}
 		
+		toolBar.items = [
+			UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:")
+		]
+		
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
-			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1])
+			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1], editable: self.editable)
 		}
 		
 		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {
@@ -78,10 +83,6 @@ class FirstViewController: UIViewController {
 			let course = lecture["Course"].element?.text
 			let startTime = lecture["StartTime"].element?.text
 			let endTime = lecture["EndTime"].element?.text
-
-			if contains(exceptSubjects, { $0 == name }) {
-				continue
-			}
 			
 			if grade == myGrade && department == myDepartment && course == myCourse {
 				let dictionary = [
@@ -128,41 +129,61 @@ class FirstViewController: UIViewController {
 		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
 			let wday = currentTableView.date!.weekday()
 			var session = sessions[wday - 1][period]
-			
-			if session?.subject.title == "" {
-				return
-			}
 
 			var alert = UIAlertController(title: session!.subject.title, message: nil, preferredStyle: .ActionSheet)
 
 			alert.addAction(UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
-				self.realm!.beginWriteTransaction()
-				session!.subject.deduction -= 1.0
-				self.realm!.commitWriteTransaction()
+				self.realm!.transactionWithBlock() {
+					session!.subject.deduction -= 1.0
+				}
+				
 				currentTableView.reloadData()
 			}))
 
 			alert.addAction(UIAlertAction(title: "遅刻(-0.5)", style: .Default, handler: { (action: UIAlertAction!) in
-				self.realm!.beginWriteTransaction()
-				session!.subject.deduction -= 0.5
-				self.realm!.commitWriteTransaction()
-				currentTableView.reloadData()
-			}))
-			
-			alert.addAction(UIAlertAction(title: "履修取消", style: .Default, handler: { (action: UIAlertAction!) in
 				self.realm!.transactionWithBlock() {
-					for var s = period+1; s < self.sessions[wday - 1].count; s++ {
-						self.sessions[wday - 1][s-1]!.subject = self.sessions[wday - 1][s]!.subject
-					}
-					
-					self.sessions[wday - 1].removeLast()
+					session!.subject.deduction -= 0.5
 				}
+				
 				currentTableView.reloadData()
 			}))
 			
 			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
 			
 			self.presentViewController(alert, animated: true, completion: nil)
+		}
+	}
+	
+	func editButtonPushed(sender: UIButton) {
+		toolBar.items = [
+			UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelButtonPushed:"),
+			UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil),
+			UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:")
+		]
+		
+		editable = true
+		switchEditable(true)
+	}
+	
+	func cancelButtonPushed(sender: UIButton) {
+		toolBar.items = [
+			UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:")
+		]
+		
+		editable = false
+		switchEditable(false)
+	}
+	
+	func doneButtonPushed(sender: UIButton) {
+		editable = false
+		switchEditable(false)
+	}
+	
+	func switchEditable(b : Bool) {
+		for subview in self.timetableView.subviews {
+			var s = subview as DateTableView
+			s.editable = b
+			s.reloadData()
 		}
 	}
 }

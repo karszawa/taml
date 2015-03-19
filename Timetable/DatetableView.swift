@@ -13,6 +13,7 @@ import Realm
 class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	var date : NSDate?
 	var sessions : [Session?] = []
+	var editable = false
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -25,25 +26,34 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		self.dataSource = self
 	}
 	
-	class func instance(date : NSDate, sessions : [Session?]) -> DateTableView {
+	class func instance(date : NSDate, sessions : [Session?], editable : Bool) -> DateTableView {
 		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as DateTableView => {
 			$0.date = date
 			$0.sessions = sessions
+			$0.editable = editable
 			$0.reloadData()
 			$0.tableFooterView = UIView()
 		}
 	}
 	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return sessions.count
+		return sessions.count + (editable ? 1 : 0)
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		if indexPath.row < self.sessions.count {
-			return SessionCell.instance(self.sessions[indexPath.row])
+		if editable {
+			if indexPath.row < self.sessions.count {
+				return EditableSessionCell.instance(self.sessions[indexPath.row])
+			} else if indexPath.row == self.sessions.count {
+				return AddSessionCell.instance()
+			}
 		} else {
-			return UITableViewCell()
+			if indexPath.row < self.sessions.count {
+				return SessionCell.instance(self.sessions[indexPath.row])
+			}
 		}
+		
+		return UITableViewCell()
 	}
 	
 	func tableView(tableView: UITableView, viewForHeaderInSection section : NSInteger) -> UIView {
