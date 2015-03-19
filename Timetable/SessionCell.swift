@@ -10,19 +10,19 @@ import UIKit
 
 class SessionCell: UITableViewCell {
 	@IBOutlet weak var periodLabelView: UILabel!
-	@IBOutlet weak var locationLabelView: UILabel!
-	@IBOutlet weak var titleLabelView: UILabel!
-	@IBOutlet weak var deductionLabelView: UILabel!
+	@IBOutlet weak var titleTextField: UITextField!
+	@IBOutlet weak var locationTextField: UITextField!
+	@IBOutlet weak var deductionTextField: UITextField!
 
 	var session : Session? {
 		didSet {
 			self.periodLabelView.text = self.session.map { $0.period.description + "限" }
-			self.locationLabelView.text = self.session?.subject.location
-			self.titleLabelView.text = self.session?.subject.title
+			self.titleTextField.text = self.session?.subject.title
+			self.locationTextField.text = self.session?.subject.location
 			if let d = self.session?.subject.deduction {
-				self.deductionLabelView.text = (d == 0 ? "" : d.description)
+				self.deductionTextField.text = (d == 0 ? "" : d.description)
 			} else {
-				self.deductionLabelView.text = ""
+				self.deductionTextField.text = ""
 			}
 		}
 	}

@@ -13,61 +13,50 @@
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Dg2-4r-54d" id="EpL-Fe-RgY">
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-15.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dDY-bq-kyt">
-                        <rect key="frame" x="530" y="36" width="62" height="33"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="27"/>
-                        <color key="textColor" red="0.33333333329999998" green="0.67450980390000004" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1限" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bE6-M1-J7c">
                         <rect key="frame" x="8" y="8" width="27" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.40000000000000002" green="0.45882352939999999" blue="0.49803921569999998" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="データ構造とアルゴリズム" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n4w-vS-dv5">
-                        <rect key="frame" x="8" y="36" width="324" height="33"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="27"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="情報メディアセンター第4演習室" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EL5-ae-rLN">
-                        <rect key="frame" x="336" y="8" width="248" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="情報メディアセンター第4演習室" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6uI-BL-hi3">
+                        <rect key="frame" x="340" y="8" width="252" height="21"/>
                         <color key="textColor" red="0.40000000000000002" green="0.45882352939999999" blue="0.49803921569999998" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="データ構造とアルゴリズム" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ann-i0-0er">
+                        <rect key="frame" x="8" y="36" width="328" height="33"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="-15.0" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sfR-R9-nrY">
+                        <rect key="frame" x="526" y="36" width="66" height="33"/>
+                        <color key="textColor" red="0.33333333329999998" green="0.67450980390000004" blue="0.93333333330000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="dDY-bq-kyt" firstAttribute="trailing" secondItem="EpL-Fe-RgY" secondAttribute="trailingMargin" id="0og-UR-bPO"/>
-                    <constraint firstItem="bE6-M1-J7c" firstAttribute="top" secondItem="EpL-Fe-RgY" secondAttribute="topMargin" id="3fY-qX-Hfr"/>
-                    <constraint firstItem="n4w-vS-dv5" firstAttribute="centerY" secondItem="dDY-bq-kyt" secondAttribute="centerY" id="4QB-Lg-9qs"/>
-                    <constraint firstItem="n4w-vS-dv5" firstAttribute="leading" secondItem="EpL-Fe-RgY" secondAttribute="leadingMargin" id="DeI-Yt-8j0"/>
-                    <constraint firstItem="dDY-bq-kyt" firstAttribute="bottom" secondItem="EpL-Fe-RgY" secondAttribute="bottomMargin" id="Dfv-C2-NNE"/>
-                    <constraint firstItem="dDY-bq-kyt" firstAttribute="top" secondItem="EL5-ae-rLN" secondAttribute="bottom" constant="7" id="IYL-T8-fU9"/>
-                    <constraint firstItem="n4w-vS-dv5" firstAttribute="bottom" secondItem="EpL-Fe-RgY" secondAttribute="bottomMargin" id="In5-rk-j0F"/>
+                    <constraint firstItem="sfR-R9-nrY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ann-i0-0er" secondAttribute="trailing" constant="10" id="5sW-Ht-YXE"/>
+                    <constraint firstItem="ann-i0-0er" firstAttribute="bottom" secondItem="EpL-Fe-RgY" secondAttribute="bottomMargin" id="Gaw-kN-bvw"/>
+                    <constraint firstItem="ann-i0-0er" firstAttribute="leading" secondItem="EpL-Fe-RgY" secondAttribute="leadingMargin" id="Lz1-ZV-3uj"/>
                     <constraint firstItem="bE6-M1-J7c" firstAttribute="leading" secondItem="EpL-Fe-RgY" secondAttribute="leadingMargin" id="avS-kd-bEM"/>
-                    <constraint firstItem="EL5-ae-rLN" firstAttribute="top" secondItem="EpL-Fe-RgY" secondAttribute="topMargin" id="hwT-cC-hgb"/>
-                    <constraint firstItem="EL5-ae-rLN" firstAttribute="top" secondItem="bE6-M1-J7c" secondAttribute="top" id="key-eF-r7D"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="EL5-ae-rLN" secondAttribute="trailing" constant="8" id="tMn-cc-Cl4"/>
-                    <constraint firstItem="EL5-ae-rLN" firstAttribute="top" secondItem="EpL-Fe-RgY" secondAttribute="topMargin" id="vYv-im-2Ji"/>
-                    <constraint firstItem="dDY-bq-kyt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="n4w-vS-dv5" secondAttribute="trailing" constant="10" id="x25-Zf-8Y4"/>
+                    <constraint firstItem="sfR-R9-nrY" firstAttribute="bottom" secondItem="EpL-Fe-RgY" secondAttribute="bottomMargin" id="ecy-ng-RAW"/>
+                    <constraint firstItem="6uI-BL-hi3" firstAttribute="trailing" secondItem="EpL-Fe-RgY" secondAttribute="trailingMargin" id="f4B-dR-Gg5"/>
+                    <constraint firstItem="bE6-M1-J7c" firstAttribute="top" secondItem="EpL-Fe-RgY" secondAttribute="topMargin" id="gP3-rF-Lw5"/>
+                    <constraint firstItem="6uI-BL-hi3" firstAttribute="top" secondItem="EpL-Fe-RgY" secondAttribute="topMargin" id="gwZ-oQ-Ckv"/>
+                    <constraint firstItem="sfR-R9-nrY" firstAttribute="trailing" secondItem="EpL-Fe-RgY" secondAttribute="trailingMargin" id="z31-Zu-bvI"/>
                 </constraints>
-                <variation key="default">
-                    <mask key="constraints">
-                        <exclude reference="hwT-cC-hgb"/>
-                        <exclude reference="vYv-im-2Ji"/>
-                        <exclude reference="IYL-T8-fU9"/>
-                    </mask>
-                </variation>
             </tableViewCellContentView>
             <connections>
-                <outlet property="deductionLabelView" destination="dDY-bq-kyt" id="Lcq-8O-iJd"/>
-                <outlet property="locationLabelView" destination="EL5-ae-rLN" id="EGg-4j-Q6t"/>
+                <outlet property="deductionTextField" destination="sfR-R9-nrY" id="WHf-u5-N9s"/>
+                <outlet property="locationTextField" destination="6uI-BL-hi3" id="EDn-7q-Nru"/>
                 <outlet property="periodLabelView" destination="bE6-M1-J7c" id="JWu-5I-kGx"/>
-                <outlet property="titleLabelView" destination="n4w-vS-dv5" id="Pn1-eG-wbZ"/>
+                <outlet property="titleTextField" destination="ann-i0-0er" id="MVF-6t-Zv4"/>
             </connections>
-            <point key="canvasLocation" x="594" y="153"/>
+            <point key="canvasLocation" x="594" y="152"/>
         </tableViewCell>
     </objects>
 </document>

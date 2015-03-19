@@ -17,7 +17,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 	@IBOutlet weak var timetableView: PersistScrollView!
 	var realm : RLMRealm?
 	var sessions = [[Session?]](count: 7, repeatedValue: [])
-	var editable = false
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -51,7 +50,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 		
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
-			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1], editable: self.editable, textfieldDelegate: self)
+			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1], textfieldDelegate: self) => {
+				$0.setEditing(self.editing, animated: true)
+			}
 		}
 		
 		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {
@@ -182,24 +183,22 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 			UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:")
 		]
 		
-		editable = true
-		switchEditable(true)
+		setEditing(true, animated: true)
 	}
 	
 	func doneButtonPushed(sender: UIButton) {
 		toolBar.items = [
 			UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:")
 		]
-		
-		editable = false
-		switchEditable(false)
+
+		setEditing(false, animated: true)
 	}
 	
-	func switchEditable(b : Bool) {
+	override func setEditing(editing: Bool, animated: Bool) {
+		super.setEditing(editing, animated: animated)
+		
 		for subview in self.timetableView.subviews {
-			var s = subview as DateTableView
-			s.editable = b
-			s.reloadData()
+			subview.setEditing(editing, animated: animated)
 		}
 	}
 	
@@ -218,13 +217,14 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 	
 	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
 		lastTouchedTextFieldY = textField.absPoint().y + textField.frame.height
+				println(lastTouchedTextFieldY)
 		return true
 	}
 	
 	func textFieldDidEndEditing(textField : UITextField) {
 		let currentTableView = self.timetableView.currentView as DateTableView
 		for i in 0 ..< currentTableView.numberOfRowsInSection(0) - 1 {
-			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as EditableSessionCell
+			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as SessionCell
 			
 			realm?.transactionWithBlock() {
 				var subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)

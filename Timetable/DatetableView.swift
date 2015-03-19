@@ -13,7 +13,6 @@ import Realm
 class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	var date : NSDate?
 	var sessions : [Session?] = []
-	var editable = false
 	var textfieldDelegate : FirstViewController?
 
 	required init(coder aDecoder: NSCoder) {
@@ -25,33 +24,39 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 
 		self.delegate = self
 		self.dataSource = self
+		self.setEditing(true, animated: true)
 	}
 	
-	class func instance(date : NSDate, sessions : [Session?], editable : Bool, textfieldDelegate : FirstViewController) -> DateTableView {
+	class func instance(date : NSDate, sessions : [Session?], textfieldDelegate : FirstViewController) -> DateTableView {
 		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as DateTableView => {
 			$0.date = date
 			$0.sessions = sessions
-			$0.editable = editable
 			$0.textfieldDelegate = textfieldDelegate
 			$0.reloadData()
 			$0.tableFooterView = UIView()
 		}
 	}
 	
+	override func setEditing(editing: Bool, animated: Bool) {
+		super.setEditing(editing, animated: animated)
+		
+		for subview in subviews {
+			if subview is UITextField {
+				subview.setEditing(editing, animated: animated)
+			}
+		}
+	}
+	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return sessions.count + (editable ? 1 : 0)
+		return sessions.count + (editing ? 1 : 0)
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		if editable {
-			if indexPath.row < self.sessions.count {
-				return EditableSessionCell.instance(self.sessions[indexPath.row], textfieldDelegate: textfieldDelegate!)
-			} else if indexPath.row == self.sessions.count {
-				return AddSessionCell.instance()
-			}
-		} else {
-			if indexPath.row < self.sessions.count {
-				return SessionCell.instance(self.sessions[indexPath.row])
+		if indexPath.row < self.sessions.count {
+			return SessionCell.instance(self.sessions[indexPath.row]) => {
+				$0.titleTextField.delegate = self.textfieldDelegate
+				$0.locationTextField.delegate = self.textfieldDelegate
+				$0.deductionTextField.delegate = self.textfieldDelegate
 			}
 		}
 		
@@ -67,11 +72,11 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		}
 		
 		if self.date == TODAY {
-			label.text = "Today"
+			label.text = "今日"
 		} else if self.date == TODAY.succ(.DayCalendarUnit, value: 1) {
-			label.text = "Tomorrow"
+			label.text = "明日"
 		} else if self.date == TODAY.succ(.DayCalendarUnit, value: -1) {
-			label.text = "Yesterday"
+			label.text = "昨日"
 		} else {
 			label.text = "\(self.date!.month())月\(self.date!.day())日 " + NSCalendar.Weekdays[self.date!.weekday()]
 //			label.text = NSCalendar.Weekdays[self.date!.weekday()] + ", " + NSCalendar.Months[self.date!.month()] + " \(self.date!.day())"
@@ -81,5 +86,17 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 			$0.backgroundColor = UIColor.PrimaryColor
 			$0.addSubview(label)
 		}
+	}
+	
+	func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+		return true
+	}
+	
+	func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+		return .Delete
+	}
+	
+	func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+		return false
 	}
 }
