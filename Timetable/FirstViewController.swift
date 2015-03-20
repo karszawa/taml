@@ -16,7 +16,6 @@ class FirstViewController: UIViewController {
 	@IBOutlet weak var messageLabelView: UILabel!
 	@IBOutlet weak var timetableView: PersistScrollView!
 	var realm : RLMRealm?
-	var sessions = [[Session?]](count: 7, repeatedValue: [])
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -34,23 +33,27 @@ class FirstViewController: UIViewController {
 				self.loadFromWeb(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
 			}
 		}
-		
-		for rlmobject in Session.allObjects() {
-			let session = rlmobject as Session
-			while sessions[session.day - 1].count < session.period {
-				sessions[session.day - 1].append(nil)
-			}
-			
-			sessions[session.day - 1][session.period - 1] = session
-		}
-		
+
 		toolBar.items = [
 			UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:")
 		]
 		
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
-			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1]) => {
+			let deleteAction = { (s : Session) -> Void in
+				self.realm!.beginWriteTransaction()
+				self.realm!.deleteObject(s)
+				self.realm!.commitWriteTransaction()
+			}
+			
+			var sessions = [Session?]()
+			for s in Session.objectsWhere("day = \(date.weekday())") {
+				sessions.append(s as? Session)
+			}
+			
+			sessions.sort({ ($0)?.period < ($1)?.period })
+			
+			return DateTableView.instance(date, sessions: sessions, deleteAction: deleteAction) => {
 				$0.setEditing(self.editing, animated: false)
 			}
 		}

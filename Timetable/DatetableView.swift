@@ -14,6 +14,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	var date : NSDate?
 	var sessions : [Session?] = []
 	var textfieldDelegate : FirstViewController?
+	var deleteAction : ((Session) -> Void)?
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -26,10 +27,11 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		self.dataSource = self
 	}
 	
-	class func instance(date : NSDate, sessions : [Session?]) -> DateTableView {
+	class func instance(date : NSDate, sessions : [Session?], deleteAction : (Session) -> Void) -> DateTableView {
 		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as DateTableView => {
 			$0.date = date
 			$0.sessions = sessions
+			$0.deleteAction = deleteAction
 			$0.reloadData()
 			$0.tableFooterView = UIView()
 		}
@@ -96,6 +98,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	
 	func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
 		if editingStyle == .Delete {
+			deleteAction!(sessions[indexPath.row]!)
 			sessions.removeAtIndex(indexPath.row)
 			reloadData()
 		}
