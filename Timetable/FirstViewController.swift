@@ -50,7 +50,9 @@ class FirstViewController: UIViewController {
 		
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
-			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1])
+			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1]) => {
+				$0.setEditing(self.editing, animated: false)
+			}
 		}
 		
 		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {

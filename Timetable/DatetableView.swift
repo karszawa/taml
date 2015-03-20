@@ -24,7 +24,6 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 
 		self.delegate = self
 		self.dataSource = self
-		self.setEditing(false, animated: false)
 	}
 	
 	class func instance(date : NSDate, sessions : [Session?]) -> DateTableView {
@@ -93,5 +92,12 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	
 	func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
 		return false
+	}
+	
+	func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+		if editingStyle == .Delete {
+			sessions.removeAtIndex(indexPath.row)
+			reloadData()
+		}
 	}
 }
