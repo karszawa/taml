@@ -149,25 +149,18 @@ class FirstViewController: UIViewController {
 		let point = sender.locationInView(currentTableView)
 		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
 			let wday = currentTableView.date!.weekday()
-			var session = Session.objectsWhere("day = \(wday - 1) AND period = \(period)").firstObject() as! Session
+			var session = Session.objectsWhere("day = \(wday) AND period = \(period+1)").firstObject() as! Session
 			var alert = UIAlertController(title: session.subject.title, message: nil, preferredStyle: .ActionSheet)
 
-			alert.addAction(UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
-				self.realm!.transactionWithBlock() {
-					session.subject.deduction -= 1.0
-				}
-				
-				currentTableView.reloadData()
-			}))
+			for tuple in [("欠席(-1.0)", Float(1.0)), ("遅刻(-0.5)", Float(0.5))] {
+				alert.addAction(UIAlertAction(title: tuple.0, style: UIAlertActionStyle.Default, handler: { action in
+					self.realm?.beginWriteTransaction()
+					session.subject.deduction -= tuple.1
+					self.realm?.commitWriteTransaction()
+					currentTableView.reloadData()
+				}))
+			}
 
-			alert.addAction(UIAlertAction(title: "遅刻(-0.5)", style: .Default, handler: { (action: UIAlertAction!) in
-				self.realm!.transactionWithBlock() {
-					session.subject.deduction -= 0.5
-				}
-				
-				currentTableView.reloadData()
-			}))
-			
 			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
 			
 			self.presentViewController(alert, animated: true, completion: nil)
@@ -177,6 +170,7 @@ class FirstViewController: UIViewController {
 	func editButtonPushed(sender: UIButton) {
 		toolBar.items = [
 			UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:"),
+			UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: self, action: nil),
 			UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addButtonPushed:")
 		]
 		

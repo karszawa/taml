@@ -20,7 +20,7 @@ class SessionCell: UITableViewCell, UITextFieldDelegate {
 			self.titleTextField.text = self.session?.subject.title
 			self.locationTextField.text = self.session?.subject.location
 			if let d = self.session?.subject.deduction {
-				self.deductionTextField.text = (d == 0 ? "" : d.description)
+				self.deductionTextField.text = d.description//(d == 0 && !editing ? "" : d.description)
 			} else {
 				self.deductionTextField.text = ""
 			}
