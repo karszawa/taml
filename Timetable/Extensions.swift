@@ -20,7 +20,7 @@ extension UIView {
 	func getParentViewController() -> UIViewController? {
 		var responder : UIResponder? = self
 		while true {
-			responder = responder?.nextResponder()? ?? self
+			responder = responder?.nextResponder() ?? self
 			
 			if responder == nil {
 				return nil
@@ -64,7 +64,7 @@ extension String {
 	}
 }
 
-let CALENDAR = NSCalendar(identifier: NSGregorianCalendar)!
+let CALENDAR = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
 
 extension NSDate {
 	func succ(unit : NSCalendarUnit, value : Int) -> NSDate? {
@@ -72,15 +72,15 @@ extension NSDate {
 	}
 
 	func weekday() -> Int {
-		return CALENDAR.component(.WeekdayCalendarUnit, fromDate: self)
+		return CALENDAR.component(.CalendarUnitWeekday, fromDate: self)
 	}
 	
 	func month() -> Int {
-		return CALENDAR.component(.MonthCalendarUnit, fromDate: self)
+		return CALENDAR.component(.CalendarUnitMonth, fromDate: self)
 	}
 	
 	func day() -> Int {
-		return CALENDAR.component(.DayCalendarUnit, fromDate: self)
+		return CALENDAR.component(.CalendarUnitDay, fromDate: self)
 	}
 }
 

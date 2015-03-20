@@ -50,8 +50,16 @@ class Subject : RLMObject {
 
 class Session : RLMObject {
 	dynamic var subject = Subject()
-	dynamic var day = 0
-	dynamic var period  = 0
+	dynamic var day = 0 {
+		didSet {
+			self.key = day.description + " " + period.description
+		}
+	}
+	dynamic var period  = 0 {
+		didSet {
+			self.key = day.description + " " + period.description
+		}
+	}
 	dynamic var key = ""
 	
 	override init() {
@@ -83,8 +91,8 @@ class Session : RLMObject {
 		return "key"
 	}
 	
-	class func find(title : String) -> Subject? {
-		return Subject.objectsWithPredicate(NSPredicate(format: "key = %@", title)).firstObject() as? Subject
+	class func find(day : Int, period : Int) -> Session? {
+		return Session.objectsWithPredicate(NSPredicate(format: "key = '\(day) \(period)'")).firstObject() as? Session
 	}
 }
 

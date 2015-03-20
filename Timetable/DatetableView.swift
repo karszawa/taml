@@ -14,7 +14,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	var date : NSDate?
 	var sessions : [Session?] = []
 	var textfieldDelegate : FirstViewController?
-	var deleteAction : ((Session) -> Void)?
+	var deleteAction : ((inout [Session?], Int) -> Void)?
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -27,8 +27,8 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		self.dataSource = self
 	}
 	
-	class func instance(date : NSDate, sessions : [Session?], deleteAction : (Session) -> Void) -> DateTableView {
-		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as DateTableView => {
+	class func instance(date : NSDate, sessions : [Session?], deleteAction : (inout [Session?], Int) -> Void) -> DateTableView {
+		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as! DateTableView => {
 			$0.date = date
 			$0.sessions = sessions
 			$0.deleteAction = deleteAction
@@ -59,7 +59,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		return UITableViewCell()
 	}
 	
-	func tableView(tableView: UITableView, viewForHeaderInSection section : NSInteger) -> UIView {
+	func tableView(tableView: UITableView, viewForHeaderInSection section : NSInteger) -> UIView? {
 		var label = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.sectionHeaderHeight)) => {
 			$0.font = .systemFontOfSize(27)
 			$0.textAlignment = .Center
@@ -69,9 +69,9 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		
 		if self.date == TODAY {
 			label.text = "今日"
-		} else if self.date == TODAY.succ(.DayCalendarUnit, value: 1) {
+		} else if self.date == TODAY.succ(.CalendarUnitDay, value: 1) {
 			label.text = "明日"
-		} else if self.date == TODAY.succ(.DayCalendarUnit, value: -1) {
+		} else if self.date == TODAY.succ(.CalendarUnitDay, value: -1) {
 			label.text = "昨日"
 		} else {
 			label.text = "\(self.date!.month())月\(self.date!.day())日 " + NSCalendar.Weekdays[self.date!.weekday()]
@@ -98,8 +98,8 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	
 	func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
 		if editingStyle == .Delete {
-			deleteAction!(sessions[indexPath.row]!)
-			sessions.removeAtIndex(indexPath.row)
+			deleteAction!(&sessions, indexPath.row)
+			
 			reloadData()
 		}
 	}

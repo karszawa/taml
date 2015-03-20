@@ -31,10 +31,13 @@ class SessionCell: UITableViewCell, UITextFieldDelegate {
 		titleTextField.delegate = self
 		locationTextField.delegate = self
 		deductionTextField.delegate = self
+		
+		self.preservesSuperviewLayoutMargins = false;
+		self.layoutMargins = UIEdgeInsetsZero
 	}
 	
 	class func instance(session : Session?) -> SessionCell {
-		return UINib(nibName: "SessionCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SessionCell => {
+		return UINib(nibName: "SessionCell", bundle: nil).instantiateWithOwner(self, options: nil).first as! SessionCell => {
 			$0.session = session
 		}
 	}
@@ -48,10 +51,6 @@ class SessionCell: UITableViewCell, UITextFieldDelegate {
 		self.backgroundColor = (highlighted ? UIColor.SubColor3 : UIColor.whiteColor())
 	}
 
-	func layoutMargins() -> UIEdgeInsets {
-		return UIEdgeInsetsZero
-	}
-	
 	override func setEditing(editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 		

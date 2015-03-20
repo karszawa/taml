@@ -39,10 +39,19 @@ class FirstViewController: UIViewController {
 		]
 		
 		self.timetableView.pageGenerator = {
-			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
-			let deleteAction = { (s : Session) -> Void in
+			let date = TODAY.succ(.CalendarUnitDay, value: $0)!
+			let deleteAction = { (inout ss : [Session?], it : Int) -> Void in
 				self.realm!.transactionWithBlock() {
-					self.realm!.deleteObject(s)
+					self.realm!.deleteObject(ss[it])
+					ss.removeAtIndex(it)
+
+					for i in it ..< ss.count {
+						ss[it]?.period -= 1
+					}
+					
+					for s in ss {
+						self.realm?.addOrUpdateObject(s)
+					}
 				}
 			}
 			
@@ -151,11 +160,11 @@ class FirstViewController: UIViewController {
 			return
 		}
 		
-		let currentTableView = self.timetableView.currentView as DateTableView
+		let currentTableView = self.timetableView.currentView as! DateTableView
 		let point = sender.locationInView(currentTableView)
 		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
 			let wday = currentTableView.date!.weekday()
-			var session = Session.objectsWhere("day = \(wday - 1) AND period = \(period)").firstObject() as Session
+			var session = Session.objectsWhere("day = \(wday - 1) AND period = \(period)").firstObject() as! Session
 			var alert = UIAlertController(title: session.subject.title, message: nil, preferredStyle: .ActionSheet)
 
 			alert.addAction(UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
@@ -205,29 +214,29 @@ class FirstViewController: UIViewController {
 	}
 	
 	func keyboardWillShow(notification: NSNotification?) {
-		let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().minY
+		let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().minY
 		if let textField = self.view.getFirstResponder() {
 			let textFieldY = textField.absPoint().y + textField.frame.height
 			let offsetY = textFieldY - min(keyboardY, textFieldY)
 		
-			(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
+			(self.timetableView.currentView as! DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
 		}
 		
 		self.timetableView.scrollEnabled = false
 	}
 	
 	func keyboardWillHide(notification: NSNotification?) {
-		let currentTableView = self.timetableView.currentView as DateTableView
+		let currentTableView = self.timetableView.currentView as! DateTableView
 		if currentTableView.numberOfRowsInSection(0) == 0 {
 			return
 		}
 		
 		for i in 0 ..< currentTableView.numberOfRowsInSection(0) {
-			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as SessionCell
+			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as! SessionCell
 			
 			realm?.transactionWithBlock() {
 				var subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
-				var wday = (self.timetableView.currentView as DateTableView).date?.weekday()
+				var wday = (self.timetableView.currentView as! DateTableView).date?.weekday()
 				var session = Session(day: wday!, period: i+1, subject: subject)
 				subject.sessions.addObject(session)
 				
@@ -236,7 +245,7 @@ class FirstViewController: UIViewController {
 			}
 		}
 		
-		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+		(self.timetableView.currentView as! DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
 		
 		self.timetableView.scrollEnabled = true
 	}
