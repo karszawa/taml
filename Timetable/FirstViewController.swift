@@ -230,17 +230,17 @@ class FirstViewController: UIViewController {
 		if currentTableView.numberOfRowsInSection(0) == 0 {
 			return
 		}
-		
+
 		for i in 0 ..< currentTableView.numberOfRowsInSection(0) {
-			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as! SessionCell
-			
-			realm?.transactionWithBlock() {
-				var subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
-				var wday = (self.timetableView.currentView as! DateTableView).date?.weekday()
-				var session = Session(day: wday!, period: i+1, subject: subject)
-				
-				self.realm?.addOrUpdateObject(subject)
-				self.realm?.addOrUpdateObject(session)
+			if let cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as? SessionCell {
+				realm?.transactionWithBlock() {
+					var subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
+					var wday = (self.timetableView.currentView as! DateTableView).date?.weekday()
+					var session = Session(day: wday!, period: i+1, subject: subject)
+					
+					self.realm?.addOrUpdateObject(subject)
+					self.realm?.addOrUpdateObject(session)
+				}
 			}
 		}
 		
@@ -248,8 +248,7 @@ class FirstViewController: UIViewController {
 		
 		self.timetableView.scrollEnabled = true
 	}
-	
-	
+
 	func realmSetSchema() {
 		RLMRealm.setSchemaVersion(7, forRealmAtPath: RLMRealm.defaultRealmPath(), withMigrationBlock: { migration, oldSchemaVersion in
 			migration.enumerateObjects(Session.className()) { oldObject, newObject in

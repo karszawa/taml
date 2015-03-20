@@ -57,5 +57,9 @@ class SessionCell: UITableViewCell, UITextFieldDelegate {
 		titleTextField.enabled = editing
 		locationTextField.enabled = editing
 		deductionTextField.enabled = editing
+		
+		titleTextField.borderStyle = (editing ? .RoundedRect : .None)
+		locationTextField.borderStyle = (editing ? .RoundedRect : .None)
+		deductionTextField.borderStyle = (editing ? .RoundedRect : .None)
 	}
 }
