@@ -10,12 +10,7 @@ import Foundation
 import UIKit
 
 class PersistScrollView : UIScrollView, UIScrollViewDelegate {
-	var pageGenerator : ((Int) -> UIView)? {
-		didSet {
-			self.adjustContentsPosition()
-		}
-	}
-	
+	var pageGenerator : ((Int) -> UIView)?
 	var currentPageNumber = 0
 	var currentView : UIView {
 		return self.subviews[1] as UIView

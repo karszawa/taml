@@ -41,9 +41,9 @@ class FirstViewController: UIViewController {
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
 			let deleteAction = { (s : Session) -> Void in
-				self.realm!.beginWriteTransaction()
-				self.realm!.deleteObject(s)
-				self.realm!.commitWriteTransaction()
+				self.realm!.transactionWithBlock() {
+					self.realm!.deleteObject(s)
+				}
 			}
 			
 			var sessions = [Session?]()
