@@ -90,8 +90,8 @@
 				A0742BFB1A8A0675005C9174 /* DateTableView.swift */,
 				A038902A1A8DFC64006FFC51 /* SessionCell.swift */,
 				A0742BFD1A8A0675005C9174 /* Subject.swift */,
-				A0742C051A8A06EB005C9174 /* SWXMLHash.swift */,
 				A04CCE8E1A8F459A00C65317 /* Extensions.swift */,
+				A0742C051A8A06EB005C9174 /* SWXMLHash.swift */,
 			);
 			name = Swift;
 			sourceTree = "<group>";
