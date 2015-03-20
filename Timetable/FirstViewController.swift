@@ -46,11 +46,7 @@ class FirstViewController: UIViewController {
 					ss.removeAtIndex(it)
 
 					for i in it ..< ss.count {
-						ss[it]?.period -= 1
-					}
-					
-					for s in ss {
-						self.realm?.addOrUpdateObject(s)
+						ss[i]?.period -= 1
 					}
 				}
 			}
@@ -132,7 +128,6 @@ class FirstViewController: UIViewController {
 					for p in dictionary[startTime!]![endTime!]! {
 						var subject = Subject(title: name!, location: location!, deduction: 0.0)
 						var session = Session(day: wday, period: p, subject: subject)
-						subject.sessions.addObject(session)
 						
 						self.realm!.addOrUpdateObject(subject)
 						self.realm!.addOrUpdateObject(session)
@@ -140,19 +135,6 @@ class FirstViewController: UIViewController {
 				}
 			}
 		}
-	}
-	
-	func realmSetSchema() {
-		RLMRealm.setSchemaVersion(6, forRealmAtPath: RLMRealm.defaultRealmPath(),
-			withMigrationBlock: { migration, oldSchemaVersion in
-				migration.enumerateObjects(Session.className()) { oldObject, newObject in
-					if oldSchemaVersion < 6 {
-						self.realm!.transactionWithBlock() {
-							self.realm!.addOrUpdateObject(Subject(title: "", location: "", deduction: 0))
-						}
-					}
-				}
-		})
 	}
 	
 	func longPressed(sender: UILongPressGestureRecognizer) {
@@ -238,7 +220,6 @@ class FirstViewController: UIViewController {
 				var subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
 				var wday = (self.timetableView.currentView as! DateTableView).date?.weekday()
 				var session = Session(day: wday!, period: i+1, subject: subject)
-				subject.sessions.addObject(session)
 				
 				self.realm?.addOrUpdateObject(subject)
 				self.realm?.addOrUpdateObject(session)
@@ -248,5 +229,26 @@ class FirstViewController: UIViewController {
 		(self.timetableView.currentView as! DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
 		
 		self.timetableView.scrollEnabled = true
+	}
+	
+	
+	func realmSetSchema() {
+		RLMRealm.setSchemaVersion(7, forRealmAtPath: RLMRealm.defaultRealmPath(), withMigrationBlock: { migration, oldSchemaVersion in
+			migration.enumerateObjects(Session.className()) { oldObject, newObject in
+				if oldSchemaVersion < 6 {
+					self.realm!.transactionWithBlock() {
+						self.realm!.addOrUpdateObject(Subject(title: "", location: "", deduction: 0))
+					}
+				}
+			}
+			
+			migration.enumerateObjects(Subject.className()) { oldObject, newObject in
+				if oldSchemaVersion < 7 {
+					newObject["title"] = oldObject["title"]
+					newObject["location"] = oldObject["location"]
+					newObject["deduction"] = oldObject["deduction"]
+				}
+			}
+		})
 	}
 }

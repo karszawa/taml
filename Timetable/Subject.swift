@@ -13,7 +13,6 @@ class Subject : RLMObject {
 	dynamic var title = ""
 	dynamic var location = ""
 	dynamic var deduction = Float(0)
-	dynamic var sessions = RLMArray(objectClassName: Session.className())
 	
 	override init() {
 		super.init()

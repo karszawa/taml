@@ -100,6 +100,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		if editingStyle == .Delete {
 			deleteAction!(&sessions, indexPath.row)
 			
+			deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
 			reloadData()
 		}
 	}
