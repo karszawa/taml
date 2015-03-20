@@ -33,6 +33,9 @@ class FirstViewController: UIViewController {
 				self.loadFromWeb(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
 			}
 		}
+		self.realm!.transactionWithBlock() {
+			self.realm!.addOrUpdateObject(Subject(title: "", location: "", deduction: 0))
+		}
 
 		toolBar.items = [
 			UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:")
@@ -173,7 +176,8 @@ class FirstViewController: UIViewController {
 	
 	func editButtonPushed(sender: UIButton) {
 		toolBar.items = [
-			UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:")
+			UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:"),
+			UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addButtonPushed:")
 		]
 		
 		setEditing(true, animated: true)
@@ -185,6 +189,20 @@ class FirstViewController: UIViewController {
 		]
 
 		setEditing(false, animated: true)
+	}
+	
+	func addButtonPushed(sender: UIButton) {
+		var view = (self.timetableView.currentView as! DateTableView)
+		let period = view.numberOfRowsInSection(0)
+		let newIndexPath = NSIndexPath(forRow: period, inSection: 0)
+		let session = Session(day: view.date!.weekday(), period: period + 1, subject: Subject.find("")!)
+		
+		self.realm!.transactionWithBlock() {
+			self.realm!.addOrUpdateObject(session)
+		}
+		
+		view.sessions.append(session)
+		view.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: UITableViewRowAnimation.Left)
 	}
 	
 	override func setEditing(editing: Bool, animated: Bool) {
