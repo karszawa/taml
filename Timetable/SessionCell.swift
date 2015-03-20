@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SessionCell: UITableViewCell {
+class SessionCell: UITableViewCell, UITextFieldDelegate {
 	@IBOutlet weak var periodLabelView: UILabel!
 	@IBOutlet weak var titleTextField: UITextField!
 	@IBOutlet weak var locationTextField: UITextField!
@@ -27,10 +27,21 @@ class SessionCell: UITableViewCell {
 		}
 	}
 	
+	override func awakeFromNib() {
+		titleTextField.delegate = self
+		locationTextField.delegate = self
+		deductionTextField.delegate = self
+	}
+	
 	class func instance(session : Session?) -> SessionCell {
 		return UINib(nibName: "SessionCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SessionCell => {
 			$0.session = session
 		}
+	}
+	
+	func textFieldShouldReturn(textField: UITextField) -> Bool {
+		textField.resignFirstResponder()
+		return true
 	}
 	
 	override func setHighlighted(highlighted: Bool, animated: Bool) {
@@ -39,5 +50,13 @@ class SessionCell: UITableViewCell {
 
 	func layoutMargins() -> UIEdgeInsets {
 		return UIEdgeInsetsZero
+	}
+	
+	override func setEditing(editing: Bool, animated: Bool) {
+		super.setEditing(editing, animated: animated)
+		
+		titleTextField.enabled = editing
+		locationTextField.enabled = editing
+		deductionTextField.enabled = editing
 	}
 }

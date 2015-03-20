@@ -30,6 +30,24 @@ extension UIView {
 		}
 	}
 	
+	func getFirstResponder() -> UIView? {
+		if self.isFirstResponder() {
+			return self
+		}
+		
+		for subview in self.subviews {
+			if subview.isFirstResponder() {
+				return subview as? UIView
+			}
+			
+			if let ret = subview.getFirstResponder() {
+				return ret
+			}
+		}
+		
+		return nil
+	}
+	
 	func absPoint() -> CGPoint {
 		if self.superview == nil {
 			return CGPointZero

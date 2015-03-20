@@ -11,7 +11,7 @@ import Realm
 
 let TODAY = NSDate()
 
-class FirstViewController: UIViewController, UITextFieldDelegate {
+class FirstViewController: UIViewController {
 	@IBOutlet weak var toolBar: UIToolbar!
 	@IBOutlet weak var messageLabelView: UILabel!
 	@IBOutlet weak var timetableView: PersistScrollView!
@@ -50,9 +50,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 		
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.DayCalendarUnit, value: $0)!
-			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1], textfieldDelegate: self) => {
-				$0.setEditing(self.editing, animated: true)
-			}
+			return DateTableView.instance(date, sessions: self.sessions[date.weekday() - 1])
 		}
 		
 		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {
@@ -202,27 +200,22 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 		}
 	}
 	
-	var lastTouchedTextFieldY = CGFloat(0)
-	
 	func keyboardWillShow(notification: NSNotification?) {
 		let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().minY
-		let offsetY = lastTouchedTextFieldY	- min(keyboardY, lastTouchedTextFieldY)
+		if let textField = self.view.getFirstResponder() {
+			let textFieldY = textField.absPoint().y + textField.frame.height
+			let offsetY = textFieldY - min(keyboardY, textFieldY)
 		
-		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
+			(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
+		}
 	}
 	
 	func keyboardWillHide(notification: NSNotification?) {
-		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
-	}
-	
-	func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-		lastTouchedTextFieldY = textField.absPoint().y + textField.frame.height
-				println(lastTouchedTextFieldY)
-		return true
-	}
-	
-	func textFieldDidEndEditing(textField : UITextField) {
 		let currentTableView = self.timetableView.currentView as DateTableView
+		if currentTableView.numberOfRowsInSection(0) == 0 {
+			return
+		}
+		
 		for i in 0 ..< currentTableView.numberOfRowsInSection(0) - 1 {
 			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as SessionCell
 			
@@ -231,15 +224,12 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 				var wday = (self.timetableView.currentView as DateTableView).date?.weekday()
 				var session = Session(day: wday!, period: i+1, subject: subject)
 				subject.sessions.addObject(session)
-
+				
 				self.realm?.addOrUpdateObject(subject)
 				self.realm?.addOrUpdateObject(session)
 			}
 		}
-	}
-	
-	func textFieldShouldReturn(textField: UITextField) -> Bool {
-		textField.resignFirstResponder()
-		return false
+		
+		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
 	}
 }

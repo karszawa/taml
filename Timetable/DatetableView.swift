@@ -24,14 +24,13 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 
 		self.delegate = self
 		self.dataSource = self
-		self.setEditing(true, animated: true)
+		self.setEditing(false, animated: false)
 	}
 	
-	class func instance(date : NSDate, sessions : [Session?], textfieldDelegate : FirstViewController) -> DateTableView {
+	class func instance(date : NSDate, sessions : [Session?]) -> DateTableView {
 		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as DateTableView => {
 			$0.date = date
 			$0.sessions = sessions
-			$0.textfieldDelegate = textfieldDelegate
 			$0.reloadData()
 			$0.tableFooterView = UIView()
 		}
@@ -48,16 +47,12 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	}
 	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return sessions.count + (editing ? 1 : 0)
+		return sessions.count
 	}
 	
 	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		if indexPath.row < self.sessions.count {
-			return SessionCell.instance(self.sessions[indexPath.row]) => {
-				$0.titleTextField.delegate = self.textfieldDelegate
-				$0.locationTextField.delegate = self.textfieldDelegate
-				$0.deductionTextField.delegate = self.textfieldDelegate
-			}
+			return SessionCell.instance(self.sessions[indexPath.row])
 		}
 		
 		return UITableViewCell()
