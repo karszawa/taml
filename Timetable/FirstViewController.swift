@@ -155,13 +155,12 @@ class FirstViewController: UIViewController {
 		let point = sender.locationInView(currentTableView)
 		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
 			let wday = currentTableView.date!.weekday()
-			var session = sessions[wday - 1][period]
-
-			var alert = UIAlertController(title: session!.subject.title, message: nil, preferredStyle: .ActionSheet)
+			var session = Session.objectsWhere("day = \(wday - 1) AND period = \(period)").firstObject() as Session
+			var alert = UIAlertController(title: session.subject.title, message: nil, preferredStyle: .ActionSheet)
 
 			alert.addAction(UIAlertAction(title: "欠席(-1.0)", style: .Default, handler: { (action: UIAlertAction!) in
 				self.realm!.transactionWithBlock() {
-					session!.subject.deduction -= 1.0
+					session.subject.deduction -= 1.0
 				}
 				
 				currentTableView.reloadData()
@@ -169,7 +168,7 @@ class FirstViewController: UIViewController {
 
 			alert.addAction(UIAlertAction(title: "遅刻(-0.5)", style: .Default, handler: { (action: UIAlertAction!) in
 				self.realm!.transactionWithBlock() {
-					session!.subject.deduction -= 0.5
+					session.subject.deduction -= 0.5
 				}
 				
 				currentTableView.reloadData()
@@ -223,7 +222,7 @@ class FirstViewController: UIViewController {
 			return
 		}
 		
-		for i in 0 ..< currentTableView.numberOfRowsInSection(0) - 1 {
+		for i in 0 ..< currentTableView.numberOfRowsInSection(0) {
 			var cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as SessionCell
 			
 			realm?.transactionWithBlock() {
