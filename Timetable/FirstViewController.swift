@@ -208,6 +208,8 @@ class FirstViewController: UIViewController {
 		
 			(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
 		}
+		
+		self.timetableView.scrollEnabled = false
 	}
 	
 	func keyboardWillHide(notification: NSNotification?) {
@@ -231,5 +233,7 @@ class FirstViewController: UIViewController {
 		}
 		
 		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+		
+		self.timetableView.scrollEnabled = true
 	}
 }
