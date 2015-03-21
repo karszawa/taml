@@ -33,7 +33,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		realm!.commitWriteTransaction()
 		
 		if Session.allObjects().count == 0 {
-			if let url = NSURL(string: timetableXMLURL) {
+			if let url = latestURL() {
 				self.loadFromWeb(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
 			}
 		}
@@ -115,27 +115,29 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		}
 	}
 	
-	func newestURL() -> NSURL? {
+	func latestURL() -> NSURL? {
 		let urlPreffix = "http://www.akashi.ac.jp/data/timetable/timetable"
 		let year = TODAY.year()
 		
 		switch(TODAY.month()) {
 		case 1...3:
-			return NSURL(string: urlPreffix + "\(year-1)10")
+			return NSURL(string: urlPreffix + "\(year-1)10.xml")
 		case 4:
-			if let url = NSURL(string: urlPreffix + "\(year)04") {
+			if let url = NSURL(string: urlPreffix + "\(year)04.xml") {
 				return url
 			}
-			return NSURL(string: urlPreffix + "\(year-1)10")
+			return NSURL(string: urlPreffix + "\(year-1)10.xml")
 		case 5...9:
-			return NSURL(string: urlPreffix + "\(year)04")
+			return NSURL(string: urlPreffix + "\(year)04.xml")
 		case 10:
-			if let url = NSURL(string: urlPreffix + "\(year)10") {
+			if let url = NSURL(string: urlPreffix + "\(year)10.xml") {
 				return url
 			}
-			return NSURL(string: urlPreffix + "\(year)04")
+			return NSURL(string: urlPreffix + "\(year)04.xml")
 		case 11...12:
-			return NSURL(string: urlPreffix + "\(year)10")
+			return NSURL(string: urlPreffix + "\(year)10.xml")
+		default:
+			return nil
 		}
 	}
 	
@@ -150,7 +152,11 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			let location = lecture["Location"].element?.text
 			let course = lecture["Course"].element?.text
 			let startTime = lecture["StartTime"].element?.text
-			let endTime = lecture["EndTime"].element?.text
+			var endTime = lecture["EndTime"].element?.text
+			if endTime == "15:25:00+09:00" {
+				endTime = "16:10:00+09:00"
+			}
+			
 			
 			if grade == myGrade && department == myDepartment && course == myCourse {
 				let dictionary = [
@@ -289,9 +295,23 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		departmentTextField.text = values[0]
 		gradeTextField.text = values[1]
 		courseTextField.text = values[2]
+		departmentTextField.sizeToFit()
+		gradeTextField.sizeToFit()
+		courseTextField.sizeToFit()
 		
 		let grade = (values[1] == "" ? 0 : String(values[1][values[1].startIndex]).toInt()!)
-//		loadFromWeb(NSURL(string: timetableXMLURL)!, myGrade: grade, myDepartment: values[0], myCourse: values[2])
+		var course : String? = values[2]
+		if course == "" {
+			course = nil
+		}
+		
+		if let url = latestURL() {
+			realm?.transactionWithBlock() {
+				self.realm?.deleteObjects(Session.allObjects())
+			}
+			loadFromWeb(url, myGrade: grade, myDepartment: values[0], myCourse: course)
+			self.timetableView.reloadContents()
+		}
 		
 		self.view.getFirstResponder()?.resignFirstResponder()
 	}
@@ -301,13 +321,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	}
 	
 	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		if component == 0 {
-			return 7
-		} else if component == 1 {
-			return 5
-		} else {
-			return 3
-		}
+		return ([7, 5, 3])[component]
 	}
 
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {

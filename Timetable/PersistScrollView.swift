@@ -29,12 +29,12 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		
 		if abs(displacement) >= 1 {
 			self.currentPageNumber += Int(displacement)
-			self.adjustContentsPosition()
+			self.reloadContents()
 			self.contentOffset.x = frame.width
 		}
 	}
 	
-	func adjustContentsPosition() {
+	func reloadContents() {
 		for subview in subviews {
 			subview.removeFromSuperview()
 		}
@@ -56,7 +56,7 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		if self.contentSize.width != self.frame.width * 3 {
 			self.contentSize.width = self.frame.width * 3
 			self.contentOffset.x = self.frame.width
-			self.adjustContentsPosition()
+			self.reloadContents()
 		}
 	}
 }
