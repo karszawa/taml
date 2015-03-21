@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A001E6FB1A92FEA3009F712F /* RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001E6FA1A92FEA3009F712F /* RLMSupport.swift */; };
-		A001E6FD1A92FEDF009F712F /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FC1A92FEDF009F712F /* Realm.framework */; };
 		A001E6FF1A92FF09009F712F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FE1A92FF09009F712F /* libc++.dylib */; };
 		A001E7011A9316DC009F712F /* TimeToPeriod.plist in Resources */ = {isa = PBXBuildFile; fileRef = A001E7001A9316DC009F712F /* TimeToPeriod.plist */; };
 		A03890231A8DF71B006FFC51 /* SessionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A03890221A8DF71B006FFC51 /* SessionCell.xib */; };
 		A038902B1A8DFC64006FFC51 /* SessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A038902A1A8DFC64006FFC51 /* SessionCell.swift */; };
+		A04500A51ABDD5E200494DB9 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A04500A41ABDD5E200494DB9 /* Realm.framework */; };
+		A04500A71ABDD5EC00494DB9 /* RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04500A61ABDD5EC00494DB9 /* RLMSupport.swift */; };
 		A04CCE8F1A8F459A00C65317 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04CCE8E1A8F459A00C65317 /* Extensions.swift */; };
 		A0742BDA1A8A062E005C9174 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0742BD91A8A062E005C9174 /* AppDelegate.swift */; };
 		A0742BDC1A8A062E005C9174 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0742BDB1A8A062E005C9174 /* FirstViewController.swift */; };
@@ -37,12 +37,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A001E6FA1A92FEA3009F712F /* RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RLMSupport.swift; sourceTree = "<group>"; };
-		A001E6FC1A92FEDF009F712F /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		A001E6FE1A92FF09009F712F /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		A001E7001A9316DC009F712F /* TimeToPeriod.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TimeToPeriod.plist; sourceTree = "<group>"; };
 		A03890221A8DF71B006FFC51 /* SessionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SessionCell.xib; sourceTree = "<group>"; };
 		A038902A1A8DFC64006FFC51 /* SessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCell.swift; sourceTree = "<group>"; };
+		A04500A41ABDD5E200494DB9 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
+		A04500A61ABDD5EC00494DB9 /* RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RLMSupport.swift; sourceTree = "<group>"; };
 		A04CCE8E1A8F459A00C65317 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A0742BD41A8A062E005C9174 /* Timetable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timetable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0742BD81A8A062E005C9174 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -66,8 +66,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A04500A51ABDD5E200494DB9 /* Realm.framework in Frameworks */,
 				A001E6FF1A92FF09009F712F /* libc++.dylib in Frameworks */,
-				A001E6FD1A92FEDF009F712F /* Realm.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +91,6 @@
 				A038902A1A8DFC64006FFC51 /* SessionCell.swift */,
 				A0742BFD1A8A0675005C9174 /* Subject.swift */,
 				A04CCE8E1A8F459A00C65317 /* Extensions.swift */,
-				A0742C051A8A06EB005C9174 /* SWXMLHash.swift */,
 			);
 			name = Swift;
 			sourceTree = "<group>";
@@ -109,9 +108,6 @@
 		A0742BCB1A8A062D005C9174 = {
 			isa = PBXGroup;
 			children = (
-				A001E6FA1A92FEA3009F712F /* RLMSupport.swift */,
-				A001E6FE1A92FF09009F712F /* libc++.dylib */,
-				A001E6FC1A92FEDF009F712F /* Realm.framework */,
 				A0742BD61A8A062E005C9174 /* Timetable */,
 				A0742BEE1A8A062E005C9174 /* TimetableTests */,
 				A0742BD51A8A062E005C9174 /* Products */,
@@ -141,6 +137,10 @@
 		A0742BD71A8A062E005C9174 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A04500A41ABDD5E200494DB9 /* Realm.framework */,
+				A001E6FE1A92FF09009F712F /* libc++.dylib */,
+				A0742C051A8A06EB005C9174 /* SWXMLHash.swift */,
+				A04500A61ABDD5EC00494DB9 /* RLMSupport.swift */,
 				A0742C071A8A198B005C9174 /* MyPlayground.playground */,
 				A0742BD81A8A062E005C9174 /* Info.plist */,
 				A001E7001A9316DC009F712F /* TimeToPeriod.plist */,
@@ -268,12 +268,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				A04CCE8F1A8F459A00C65317 /* Extensions.swift in Sources */,
+				A04500A71ABDD5EC00494DB9 /* RLMSupport.swift in Sources */,
 				A0742BDA1A8A062E005C9174 /* AppDelegate.swift in Sources */,
 				A0742BDC1A8A062E005C9174 /* FirstViewController.swift in Sources */,
 				A038902B1A8DFC64006FFC51 /* SessionCell.swift in Sources */,
 				A0742C011A8A0675005C9174 /* PersistScrollView.swift in Sources */,
 				A0742C021A8A0675005C9174 /* Subject.swift in Sources */,
-				A001E6FB1A92FEA3009F712F /* RLMSupport.swift in Sources */,
 				A0742C061A8A06EB005C9174 /* SWXMLHash.swift in Sources */,
 				A0742C001A8A0675005C9174 /* DateTableView.swift in Sources */,
 			);
@@ -393,6 +393,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Timetable",
 				);
 				INFOPLIST_FILE = Timetable/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -408,6 +409,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Timetable",
 				);
 				INFOPLIST_FILE = Timetable/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
