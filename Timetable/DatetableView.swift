@@ -98,8 +98,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
 		if editingStyle == .Delete {
 			deleteAction!(&sessions, indexPath.row)
-			
-			deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+			// deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
 			reloadData()
 		}
 	}

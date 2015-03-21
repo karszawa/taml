@@ -49,7 +49,14 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 					ss.removeAtIndex(it)
 
 					for i in it ..< ss.count {
-						ss[i]?.period -= 1
+						var subject = ss[i]!.subject
+						var day = ss[i]!.day
+						var period = ss[i]!.period - 1
+
+						var d = ss[i]
+						ss[i] = Session(day: day, period: period, subject: subject)
+						self.realm!.deleteObject(d)
+						self.realm?.addOrUpdateObject(ss[i])
 					}
 				}
 			}
@@ -187,10 +194,8 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		let currentTableView = self.timetableView.currentView as! DateTableView
 		let wday = currentTableView.date!.weekday()
 		let point = sender.locationInView(currentTableView)
-		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
-			println(period + 1)
-			var session = Session.find(wday, period: period + 1)!
-			println(session.subject.title)
+		if let period = currentTableView.indexPathForRowAtPoint(point)?.row,
+		   var session = Session.find(wday, period: period + 1) {
 			var alert = UIAlertController(title: session.subject.title, message: nil, preferredStyle: .ActionSheet)
 
 			for tuple in [("欠席(-1.0)", Float(1.0)), ("遅刻(-0.5)", Float(0.5))] {
