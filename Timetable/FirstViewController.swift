@@ -19,7 +19,6 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	@IBOutlet weak var courseTextField: UITextField!
 	@IBOutlet weak var pickerResignButton: UIButton!
 	var picker = UIPickerView()
-	var timetableXMLURL = "http://www.akashi.ac.jp/data/timetable/timetable201410.xml"
 	var realm : RLMRealm?
 	
 	override func viewDidLoad() {
@@ -113,6 +112,30 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			notification.removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
 			notification.removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
 			isObserving = false
+		}
+	}
+	
+	func newestURL() -> NSURL? {
+		let urlPreffix = "http://www.akashi.ac.jp/data/timetable/timetable"
+		let year = TODAY.year()
+		
+		switch(TODAY.month()) {
+		case 1...3:
+			return NSURL(string: urlPreffix + "\(year-1)10")
+		case 4:
+			if let url = NSURL(string: urlPreffix + "\(year)04") {
+				return url
+			}
+			return NSURL(string: urlPreffix + "\(year-1)10")
+		case 5...9:
+			return NSURL(string: urlPreffix + "\(year)04")
+		case 10:
+			if let url = NSURL(string: urlPreffix + "\(year)10") {
+				return url
+			}
+			return NSURL(string: urlPreffix + "\(year)04")
+		case 11...12:
+			return NSURL(string: urlPreffix + "\(year)10")
 		}
 	}
 	

@@ -82,6 +82,10 @@ extension NSDate {
 	func day() -> Int {
 		return CALENDAR.component(.CalendarUnitDay, fromDate: self)
 	}
+	
+	func year() -> Int {
+		return CALENDAR.component(.CalendarUnitYear, fromDate: self)
+	}
 }
 
 extension UIColor {
