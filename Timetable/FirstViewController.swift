@@ -14,10 +14,8 @@ let TODAY = NSDate()
 class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	@IBOutlet weak var toolBar: UIToolbar!
 	@IBOutlet weak var timetableView: PersistScrollView!
-	@IBOutlet weak var departmentTextField: UITextField!
-	@IBOutlet weak var gradeTextField: UITextField!
-	@IBOutlet weak var courseTextField: UITextField!
 	@IBOutlet weak var pickerResignButton: UIButton!
+	@IBOutlet weak var classTextField: UITextField!
 	var picker = UIPickerView()
 	var realm : RLMRealm?
 	
@@ -75,9 +73,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		picker.delegate = self
 		picker.dataSource = self
 		picker.showsSelectionIndicator = true
-		departmentTextField.inputView = picker
-		gradeTextField.inputView = picker
-		courseTextField.inputView = picker
+		classTextField.inputView = picker
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -157,7 +153,6 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 				endTime = "16:10:00+09:00"
 			}
 			
-			
 			if grade == myGrade && department == myDepartment && course == myCourse {
 				let dictionary = [
 					"09:00:00+09:00": ["10:30:00+09:00" : [1], "12:10:00+09:00" : [1, 2]],
@@ -190,17 +185,17 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		}
 		
 		let currentTableView = self.timetableView.currentView as! DateTableView
+		let wday = currentTableView.date!.weekday()
 		let point = sender.locationInView(currentTableView)
-		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
-			let wday = currentTableView.date!.weekday()
-			var session = Session.objectsWhere("day = \(wday) AND period = \(period+1)").firstObject() as! Session
+		if let period = currentTableView.indexPathForRowAtPoint(point)?.row,
+			var session = Session.find(wday, period: period + 1) {
 			var alert = UIAlertController(title: session.subject.title, message: nil, preferredStyle: .ActionSheet)
 
 			for tuple in [("欠席(-1.0)", Float(1.0)), ("遅刻(-0.5)", Float(0.5))] {
 				alert.addAction(UIAlertAction(title: tuple.0, style: UIAlertActionStyle.Default, handler: { action in
-					self.realm?.beginWriteTransaction()
-					session.subject.deduction -= tuple.1
-					self.realm?.commitWriteTransaction()
+					self.realm?.transactionWithBlock() {
+						session.subject.deduction -= tuple.1
+					}
 					currentTableView.reloadData()
 				}))
 			}
@@ -251,6 +246,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		}
 	}
 	
+	// both keyboard and picker call this method
 	func keyboardWillShow(notification: NSNotification?) {
 		if let textField = self.view.getFirstResponder() {
 			if textField.inputView is UIPickerView {
@@ -268,7 +264,12 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		self.timetableView.scrollEnabled = false
 	}
 	
+	// both keyboard and picker call this method
 	func keyboardWillHide(notification: NSNotification?) {
+		if self.view.getFirstResponder()?.inputView is UIPickerView {
+			return
+		}
+		
 		let currentTableView = self.timetableView.currentView as! DateTableView
 		if currentTableView.numberOfRowsInSection(0) == 0 {
 			return
@@ -277,9 +278,9 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		for i in 0 ..< currentTableView.numberOfRowsInSection(0) {
 			if let cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as? SessionCell {
 				realm?.transactionWithBlock() {
-					var subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
-					var wday = (self.timetableView.currentView as! DateTableView).date?.weekday()
-					var session = Session(day: wday!, period: i+1, subject: subject)
+					let subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
+					let wday = (self.timetableView.currentView as! DateTableView).date?.weekday()
+					let session = Session(day: wday!, period: i+1, subject: subject)
 					
 					self.realm?.addOrUpdateObject(subject)
 					self.realm?.addOrUpdateObject(session)
@@ -294,53 +295,67 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	
 	@IBAction func hideButtonPushed(sender: UIButton) {
 		pickerResignButton?.hidden = true
+		var cls = pickerView(picker, titleForRow: picker.selectedRowInComponent(0), forComponent: 0)
 
-		var values = ["", "", ""]
-		for i in 0...2 {
-			var row = picker.selectedRowInComponent(i)
-			values[i] = pickerView(picker, titleForRow: row, forComponent: i)
-		}
+		classTextField.text = cls
+		classTextField.sizeToFit()
 		
-		departmentTextField.text = (values[0] == "-" ? " " : values[0])
-		gradeTextField.text = (values[1] == "-" ? "" : values[1])
-		courseTextField.text = (values[2] == "-" ? "" : values[2])
-		departmentTextField.sizeToFit()
-		gradeTextField.sizeToFit()
-		courseTextField.sizeToFit()
-		
-		let grade = (values[1] == "" ? 0 : String(values[1][values[1].startIndex]).toInt()!)
-		var course : String? = values[2]
-		if course == "-" {
-			course = nil
-		}
-		
-		if let url = latestURL() {
-			realm?.transactionWithBlock() {
-				self.realm?.deleteObjects(Session.allObjects())
+		if cls != "-" {
+			let grade = String(cls[cls.startIndex]).toInt()!
+			var department = String(cls[advance(cls.startIndex, 1)])
+			var course : String? = nil
+			
+			if count(cls) == 3 {
+				let i = advance(cls.startIndex, 2)
+				if cls[i] == "D" {
+					course = "電気電子工学コース"
+				} else if cls[i] == "J" {
+					course = "情報工学コース"
+				} else {
+					department.append(cls[i])
+				}
 			}
-			loadFromWeb(url, myGrade: grade, myDepartment: values[0], myCourse: course)
-			self.timetableView.reloadContents()
+			
+			let departmentDictionary = [
+				"M": "機械工学科", "E": "電気情報工学科", "C": "都市システム工学科", "A": "建築学科",
+				"ME": "機械・電子システム工学専攻", "CA": "建築・都市システム工学専攻"
+			]
+			
+			if let url = latestURL() {
+				let alert = UIAlertController(title: "最新のシラバスをダウンロードします。", message: "最新の時間割は2015年4月のものです。ダウンロード完了後に自動で時間割が書き換わります。", preferredStyle: .Alert)
+				
+				alert.addAction(UIAlertAction(title: "確認", style: .Default, handler: { action in
+					self.realm?.transactionWithBlock() {
+						self.realm?.deleteObjects(Session.allObjects())
+					}
+					
+					self.loadFromWeb(url, myGrade: grade, myDepartment: departmentDictionary[department]!, myCourse: course)
+					self.timetableView.reloadContents()
+				}))
+				
+				alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
+				presentViewController(alert, animated: true, completion: {
+					self.classTextField.resignFirstResponder()
+				})
+				
+			} else {
+				self.classTextField.resignFirstResponder()
+			}
+		} else {
+			self.view.getFirstResponder()?.resignFirstResponder()
 		}
-		
-		self.view.getFirstResponder()?.resignFirstResponder()
 	}
 
 	func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-		return 3
+		return 1
 	}
 	
 	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return ([7, 6, 3])[component]
+		return 32
 	}
 
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
-		if component == 0 {
-			return (["機械工学科", "電気情報工学科", "都市システム工学科", "建築学科", "機械・電子システム工学専攻", "建築・都市システム工学専攻", "-"])[row]
-		} else if component == 1 {
-			return (row < 5 ? "\(row+1)年" : "-")
-		} else {
-			return (["-", "情報工学コース", "電気電子工学コース"])[row]
-		}
+		return (["1M", "1E", "1C", "1A", "2M", "2E", "2C", "2A", "3M", "3E", "3C", "3A", "4M", "4ED", "4EJ", "4C", "4A", "5M", "5ED", "5EJ", "5C", "5A", "1ME", "1AC", "2ME", "2AC", "-"])[row]
 	}
 	
 	func realmSetSchema() {

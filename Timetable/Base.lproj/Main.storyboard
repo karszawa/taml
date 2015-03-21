@@ -34,26 +34,8 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="cf4-I7-iC2"/>
-                                    <barButtonItem style="plain" id="FGE-UL-MBy">
-                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="都市・建築システム工学専攻" textAlignment="right" minimumFontSize="17" id="hku-ZS-hwv">
-                                            <rect key="frame" x="372" y="7" width="186" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" id="ocq-7M-ZQa">
-                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="5年" textAlignment="right" minimumFontSize="17" id="g3c-yA-fJw">
-                                            <rect key="frame" x="456" y="7" width="22" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
-                                    </barButtonItem>
                                     <barButtonItem style="plain" id="qmX-gP-Yst">
-                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="情報コース" textAlignment="right" minimumFontSize="17" id="ph5-BG-smC">
+                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="5EJ" textAlignment="right" minimumFontSize="17" id="ph5-BG-smC">
                                             <rect key="frame" x="515" y="7" width="70" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -82,9 +64,7 @@
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="courseTextField" destination="ph5-BG-smC" id="nIj-5N-9uN"/>
-                        <outlet property="departmentTextField" destination="hku-ZS-hwv" id="lGp-Vc-SKy"/>
-                        <outlet property="gradeTextField" destination="g3c-yA-fJw" id="EpY-A2-6Hk"/>
+                        <outlet property="classTextField" destination="ph5-BG-smC" id="kNw-IO-25m"/>
                         <outlet property="pickerResignButton" destination="ugY-it-JQV" id="ibC-RT-3xb"/>
                         <outlet property="timetableView" destination="5Ih-dI-Ddp" id="6B4-ZX-768"/>
                         <outlet property="toolBar" destination="U32-Yx-Ugb" id="iWU-pR-hLp"/>
