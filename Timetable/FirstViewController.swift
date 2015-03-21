@@ -168,8 +168,12 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 				
 				realm!.transactionWithBlock() {
 					for p in dictionary[startTime!]![endTime!]! {
-						// update deduction
-						var subject = Subject(title: name!, location: location!, deduction: 0.0)
+						var deduction = Float(0)
+						if let s = Subject.find(name!) {
+							deduction = s.deduction
+						}
+						
+						var subject = Subject(title: name!, location: location!, deduction: deduction)
 						var session = Session(day: wday, period: p, subject: subject)
 						
 						self.realm!.addOrUpdateObject(subject)
@@ -202,6 +206,11 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			}
 
 			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
+			
+			if let cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: period, inSection: 0)) {
+				alert.popoverPresentationController?.sourceView = cell
+				alert.popoverPresentationController?.sourceRect = cell.bounds
+			}
 			
 			self.presentViewController(alert, animated: true, completion: nil)
 		}
@@ -321,7 +330,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	}
 	
 	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return ([7, 5, 3])[component]
+		return ([7, 6, 3])[component]
 	}
 
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
@@ -330,7 +339,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		} else if component == 1 {
 			return (row < 5 ? "\(row+1)年" : "")
 		} else {
-			return (["", "情報コース", "電気電子工学コース"])[row]
+			return (["", "情報工学コース", "電気電子工学コース"])[row]
 		}
 	}
 	
