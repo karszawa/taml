@@ -45,7 +45,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			let date = TODAY.succ(.CalendarUnitDay, value: $0)!
 			let deleteAction = { (inout ss : [Session?], it : Int) -> Void in
 				self.realm!.transactionWithBlock() {
-				self.realm!.deleteObject(ss[it])
+					self.realm!.deleteObject(ss[it])
 					ss.removeAtIndex(it)
 
 					for i in it ..< ss.count {
@@ -187,8 +187,10 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		let currentTableView = self.timetableView.currentView as! DateTableView
 		let wday = currentTableView.date!.weekday()
 		let point = sender.locationInView(currentTableView)
-		if let period = currentTableView.indexPathForRowAtPoint(point)?.row,
-			var session = Session.find(wday, period: period + 1) {
+		if let period = currentTableView.indexPathForRowAtPoint(point)?.row {
+			println(period + 1)
+			var session = Session.find(wday, period: period + 1)!
+			println(session.subject.title)
 			var alert = UIAlertController(title: session.subject.title, message: nil, preferredStyle: .ActionSheet)
 
 			for tuple in [("欠席(-1.0)", Float(1.0)), ("遅刻(-0.5)", Float(0.5))] {
@@ -214,12 +216,13 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	func editButtonPushed(sender: UIButton) {
 		toolBar.items?.removeAtIndex(0)
 		toolBar.items?.insert(UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addButtonPushed:"), atIndex: 0)
+		toolBar.items?.insert(UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: self, action: nil), atIndex: 0)
 		toolBar.items?.insert(UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:"), atIndex: 0)
 		setEditing(true, animated: true)
 	}
 	
 	func doneButtonPushed(sender: UIButton) {
-		toolBar.items?.removeRange(0...1)
+		toolBar.items?.removeRange(0...2)
 		toolBar.items?.insert(UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:"), atIndex: 0)
 		setEditing(false, animated: true)
 	}
@@ -296,9 +299,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	@IBAction func hideButtonPushed(sender: UIButton) {
 		pickerResignButton?.hidden = true
 		var cls = pickerView(picker, titleForRow: picker.selectedRowInComponent(0), forComponent: 0)
-
 		classTextField.text = cls
-		classTextField.sizeToFit()
 		
 		if cls != "-" {
 			let grade = String(cls[cls.startIndex]).toInt()!
@@ -322,7 +323,10 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			]
 			
 			if let url = latestURL() {
-				let alert = UIAlertController(title: "最新のシラバスをダウンロードします。", message: "最新の時間割は2015年4月のものです。ダウンロード完了後に自動で時間割が書き換わります。", preferredStyle: .Alert)
+				let str = url.absoluteString!
+				let year = str.substringWithRange(Range<String.Index>(start: advance(str.endIndex, -10), end: advance(str.endIndex, -6)))
+				let month = str.substringWithRange(Range<String.Index>(start: advance(str.endIndex, -6), end: advance(str.endIndex, -4)))
+				let alert = UIAlertController(title: "最新のシラバスをダウンロードします。", message: "最新の時間割は\(year)年\(month)月のものです。ダウンロード完了後に自動で時間割が書き換わります。", preferredStyle: .Alert)
 				
 				alert.addAction(UIAlertAction(title: "確認", style: .Default, handler: { action in
 					self.realm?.transactionWithBlock() {

@@ -75,7 +75,6 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 			label.text = "昨日"
 		} else {
 			label.text = "\(self.date!.month())月\(self.date!.day())日 " + NSCalendar.Weekdays[self.date!.weekday()]
-//			label.text = NSCalendar.Weekdays[self.date!.weekday()] + ", " + NSCalendar.Months[self.date!.month()] + " \(self.date!.day())"
 		}
 		
 		return UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.sectionHeaderHeight)) => {
