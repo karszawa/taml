@@ -11,10 +11,15 @@ import Realm
 
 let TODAY = NSDate()
 
-class FirstViewController: UIViewController {
+class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	@IBOutlet weak var toolBar: UIToolbar!
-	@IBOutlet weak var messageLabelView: UILabel!
 	@IBOutlet weak var timetableView: PersistScrollView!
+	@IBOutlet weak var departmentTextField: UITextField!
+	@IBOutlet weak var gradeTextField: UITextField!
+	@IBOutlet weak var courseTextField: UITextField!
+	@IBOutlet weak var pickerResignButton: UIButton!
+	var picker = UIPickerView()
+	var timetableXMLURL = "http://www.akashi.ac.jp/data/timetable/timetable201410.xml"
 	var realm : RLMRealm?
 	
 	override func viewDidLoad() {
@@ -29,7 +34,7 @@ class FirstViewController: UIViewController {
 		realm!.commitWriteTransaction()
 		
 		if Session.allObjects().count == 0 {
-			if let url = NSURL(string: "http://www.akashi.ac.jp/data/timetable/timetable201410.xml") {
+			if let url = NSURL(string: timetableXMLURL) {
 				self.loadFromWeb(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
 			}
 		}
@@ -37,15 +42,13 @@ class FirstViewController: UIViewController {
 			self.realm!.addOrUpdateObject(Subject(title: "", location: "", deduction: 0))
 		}
 
-		toolBar.items = [
-			UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:")
-		]
+		toolBar.items?.insert(UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:"), atIndex: 0)
 		
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.CalendarUnitDay, value: $0)!
 			let deleteAction = { (inout ss : [Session?], it : Int) -> Void in
 				self.realm!.transactionWithBlock() {
-					self.realm!.deleteObject(ss[it])
+				self.realm!.deleteObject(ss[it])
 					ss.removeAtIndex(it)
 
 					for i in it ..< ss.count {
@@ -69,6 +72,13 @@ class FirstViewController: UIViewController {
 		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {
 			$0.minimumPressDuration = 1.0;
 		})
+		
+		picker.delegate = self
+		picker.dataSource = self
+		picker.showsSelectionIndicator = true
+		departmentTextField.inputView = picker
+		gradeTextField.inputView = picker
+		courseTextField.inputView = picker
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -129,6 +139,7 @@ class FirstViewController: UIViewController {
 				
 				realm!.transactionWithBlock() {
 					for p in dictionary[startTime!]![endTime!]! {
+						// update deduction
 						var subject = Subject(title: name!, location: location!, deduction: 0.0)
 						var session = Session(day: wday, period: p, subject: subject)
 						
@@ -168,20 +179,15 @@ class FirstViewController: UIViewController {
 	}
 	
 	func editButtonPushed(sender: UIButton) {
-		toolBar.items = [
-			UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:"),
-			UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: self, action: nil),
-			UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addButtonPushed:")
-		]
-		
+		toolBar.items?.removeAtIndex(0)
+		toolBar.items?.insert(UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addButtonPushed:"), atIndex: 0)
+		toolBar.items?.insert(UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "doneButtonPushed:"), atIndex: 0)
 		setEditing(true, animated: true)
 	}
 	
 	func doneButtonPushed(sender: UIButton) {
-		toolBar.items = [
-			UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:")
-		]
-
+		toolBar.items?.removeRange(0...1)
+		toolBar.items?.insert(UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editButtonPushed:"), atIndex: 0)
 		setEditing(false, animated: true)
 	}
 	
@@ -208,9 +214,14 @@ class FirstViewController: UIViewController {
 	}
 	
 	func keyboardWillShow(notification: NSNotification?) {
-		let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().minY
 		if let textField = self.view.getFirstResponder() {
+			if textField.inputView is UIPickerView {
+				pickerResignButton?.hidden = false
+				return
+			}
+			
 			let textFieldY = textField.absPoint().y + textField.frame.height
+			let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().minY
 			let offsetY = textFieldY - min(keyboardY, textFieldY)
 		
 			(self.timetableView.currentView as! DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
@@ -242,7 +253,50 @@ class FirstViewController: UIViewController {
 		
 		self.timetableView.scrollEnabled = true
 	}
+	
+	@IBAction func hideButtonPushed(sender: UIButton) {
+		pickerResignButton?.hidden = true
 
+		var values = ["", "", ""]
+		for i in 0...2 {
+			var row = picker.selectedRowInComponent(i)
+			values[i] = pickerView(picker, titleForRow: row, forComponent: i)
+		}
+		
+		departmentTextField.text = values[0]
+		gradeTextField.text = values[1]
+		courseTextField.text = values[2]
+		
+		let grade = (values[1] == "" ? 0 : String(values[1][values[1].startIndex]).toInt()!)
+//		loadFromWeb(NSURL(string: timetableXMLURL)!, myGrade: grade, myDepartment: values[0], myCourse: values[2])
+		
+		self.view.getFirstResponder()?.resignFirstResponder()
+	}
+
+	func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+		return 3
+	}
+	
+	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		if component == 0 {
+			return 7
+		} else if component == 1 {
+			return 5
+		} else {
+			return 3
+		}
+	}
+
+	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+		if component == 0 {
+			return (["機械工学科", "電気情報工学科", "建築工学科", "都市システム工学科", "機械・電子システム工学専攻", "建築・都市システム工学専攻", ""])[row]
+		} else if component == 1 {
+			return (row < 5 ? "\(row+1)年" : "")
+		} else {
+			return (["", "情報コース", "電気電子工学コース"])[row]
+		}
+	}
+	
 	func realmSetSchema() {
 		RLMRealm.setSchemaVersion(7, forRealmAtPath: RLMRealm.defaultRealmPath(), withMigrationBlock: { migration, oldSchemaVersion in
 			migration.enumerateObjects(Session.className()) { oldObject, newObject in
