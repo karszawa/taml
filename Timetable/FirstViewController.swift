@@ -301,16 +301,16 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			values[i] = pickerView(picker, titleForRow: row, forComponent: i)
 		}
 		
-		departmentTextField.text = values[0]
-		gradeTextField.text = values[1]
-		courseTextField.text = values[2]
+		departmentTextField.text = (values[0] == "-" ? " " : values[0])
+		gradeTextField.text = (values[1] == "-" ? "" : values[1])
+		courseTextField.text = (values[2] == "-" ? "" : values[2])
 		departmentTextField.sizeToFit()
 		gradeTextField.sizeToFit()
 		courseTextField.sizeToFit()
 		
 		let grade = (values[1] == "" ? 0 : String(values[1][values[1].startIndex]).toInt()!)
 		var course : String? = values[2]
-		if course == "" {
+		if course == "-" {
 			course = nil
 		}
 		
@@ -335,11 +335,11 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
 		if component == 0 {
-			return (["機械工学科", "電気情報工学科", "都市システム工学科", "建築学科", "機械・電子システム工学専攻", "建築・都市システム工学専攻", ""])[row]
+			return (["機械工学科", "電気情報工学科", "都市システム工学科", "建築学科", "機械・電子システム工学専攻", "建築・都市システム工学専攻", "-"])[row]
 		} else if component == 1 {
-			return (row < 5 ? "\(row+1)年" : "")
+			return (row < 5 ? "\(row+1)年" : "-")
 		} else {
-			return (["", "情報工学コース", "電気電子工学コース"])[row]
+			return (["-", "情報工学コース", "電気電子工学コース"])[row]
 		}
 	}
 	
