@@ -326,7 +326,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
 		if component == 0 {
-			return (["機械工学科", "電気情報工学科", "建築工学科", "都市システム工学科", "機械・電子システム工学専攻", "建築・都市システム工学専攻", ""])[row]
+			return (["機械工学科", "電気情報工学科", "都市システム工学科", "建築学科", "機械・電子システム工学専攻", "建築・都市システム工学専攻", ""])[row]
 		} else if component == 1 {
 			return (row < 5 ? "\(row+1)年" : "")
 		} else {
