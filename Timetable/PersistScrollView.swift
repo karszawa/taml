@@ -10,12 +10,7 @@ import Foundation
 import UIKit
 
 class PersistScrollView : UIScrollView, UIScrollViewDelegate {
-	var pageGenerator : ((Int) -> UIView)? {
-		didSet {
-			self.adjustContentsPosition()
-		}
-	}
-	
+	var pageGenerator : ((Int) -> UIView)?
 	var currentPageNumber = 0
 	var currentView : UIView {
 		return self.subviews[1] as UIView
@@ -34,22 +29,20 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		
 		if abs(displacement) >= 1 {
 			self.currentPageNumber += Int(displacement)
-			self.adjustContentsPosition()
+			self.reloadContents()
 			self.contentOffset.x = frame.width
 		}
 	}
 	
-	func adjustContentsPosition() {
+	func reloadContents() {
 		for subview in subviews {
 			subview.removeFromSuperview()
 		}
 		
 		for i in 0...2 {
-			let newPage = pageGenerator!(currentPageNumber + i - 1) as DateTableView => {
-				$0.frame.size = self.frame.size
-				$0.frame.origin.x = self.frame.width * CGFloat(i)
-			}
-			
+			let newPage = (pageGenerator!(currentPageNumber + i - 1) as DateTableView)
+			newPage.frame.size = self.frame.size
+			newPage.frame.origin.x = self.frame.width * CGFloat(i)
 			self.addSubview(newPage)
 		}
 	}
@@ -61,7 +54,7 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		if self.contentSize.width != self.frame.width * 3 {
 			self.contentSize.width = self.frame.width * 3
 			self.contentOffset.x = self.frame.width
-			self.adjustContentsPosition()
+			self.reloadContents()
 		}
 	}
 }
