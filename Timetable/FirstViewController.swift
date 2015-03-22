@@ -11,7 +11,7 @@ import Realm
 
 let TODAY = NSDate()
 let CLASSSYMBOLS = [ "1M", "1E", "1C", "1A", "2M", "2E", "2C", "2A", "3M", "3E", "3C", "3A", "4M", "4ED", "4EJ", "4C", "4A", "5M", "5ED", "5EJ", "5C", "5A", "1ME", "1AC", "2ME", "2AC", "-" ]
-let SYMBOLTODEPARTMENT = [ "M": "機械工学科", "E": "電気情報工学科", "C": "都市システム工学科", "A": "建築学科",  "ME": "機械・電子システム工学専攻", "CA": "建築・都市システム工学専攻" ]
+let SYMBOLTODEPARTMENT = [ "M": "機械工学科", "E": "電気情報工学科", "C": "都市システム工学科", "A": "建築学科",  "ME": "機械・電子システム工学専攻", "AC": "建築・都市システム工学専攻" ]
 let TIMESPANTOPERIODS = [
 	"09:00:00+09:00": ["10:30:00+09:00" : [1], "12:10:00+09:00" : [1, 2]],
 	"10:40:00+09:00": ["12:10:00+09:00" : [2]],
@@ -48,6 +48,15 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 				sessions.append(s as? Session)
 			}
 			
+			if !sessions.isEmpty {
+				for i in 1 ..< sessions.last!!.period {
+					if sessions[i-1]!.period != i {
+						let subject = Subject(title: "", location: "", deduction: Float(0))
+						sessions.insert(Session(day: date.weekday(), period: i, subject: subject), atIndex: i-1)
+					}
+				}
+			}
+			
 			return DateTableView.instance(date, sessions: sessions) => {
 				$0.setEditing(self.editing, animated: false)
 			}
@@ -56,6 +65,8 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {
 			$0.minimumPressDuration = 1.0;
 		})
+		
+		classTextField.text = UserInfo.origin().classInfo
 		
 		picker.delegate = self
 		picker.dataSource = self
@@ -148,7 +159,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 							deduction = s.deduction
 						}
 						
-						var subject = Subject(title: name!, location: location!, deduction: deduction)
+						var subject = Subject(title: name!, location: location ?? "", deduction: deduction)
 						var session = Session(day: wday, period: p, subject: subject)
 						
 						self.realm!.addOrUpdateObject(subject)
@@ -282,7 +293,6 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	@IBAction func hideButtonPushed(sender: UIButton) {
 		pickerResignButton?.hidden = true
 		var cls = pickerView(picker, titleForRow: picker.selectedRowInComponent(0), forComponent: 0)
-		classTextField.text = cls
 		
 		if cls != "-" {
 			let grade = String(cls[cls.startIndex]).toInt()!
@@ -309,8 +319,12 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 				alert.addAction(UIAlertAction(title: "確認", style: .Default, handler: { action in
 					self.realm?.transactionWithBlock() {
 						self.realm?.deleteObjects(Session.allObjects())
+						var info = UserInfo.origin()
+						info.classInfo = cls
+						self.realm?.addOrUpdateObject(info)
 					}
 					
+					self.classTextField.text = cls
 					self.loadFromWeb(url, myGrade: grade, myDepartment: SYMBOLTODEPARTMENT[department]!, myCourse: course)
 					self.timetableView.reloadContents()
 				}))
@@ -324,6 +338,14 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 				self.classTextField.resignFirstResponder()
 			}
 		} else {
+			self.realm?.transactionWithBlock() {
+				var info = UserInfo.origin()
+				info.classInfo = cls
+				self.realm?.addOrUpdateObject(info)
+				self.realm?.deleteObjects(Session.allObjects())
+			}
+			
+			self.classTextField.text = cls
 			self.view.getFirstResponder()?.resignFirstResponder()
 		}
 	}
