@@ -10,6 +10,14 @@ import UIKit
 import Realm
 
 let TODAY = NSDate()
+let classSymbols = [ "1M", "1E", "1C", "1A", "2M", "2E", "2C", "2A", "3M", "3E", "3C", "3A", "4M", "4ED", "4EJ", "4C", "4A", "5M", "5ED", "5EJ", "5C", "5A", "1ME", "1AC", "2ME", "2AC", "-" ]
+let symbolToDepartment = [ "M": "機械工学科", "E": "電気情報工学科", "C": "都市システム工学科", "A": "建築学科",  "ME": "機械・電子システム工学専攻", "CA": "建築・都市システム工学専攻" ]
+let timespanToPeriods = [
+	"09:00:00+09:00": ["10:30:00+09:00" : [1], "12:10:00+09:00" : [1, 2]],
+	"10:40:00+09:00": ["12:10:00+09:00" : [2]],
+	"13:00:00+09:00": ["14:30:00+09:00" : [3], "16:10:00+09:00" : [3, 4]],
+	"14:40:00+09:00": ["16:10:00+09:00" : [4]]
+]
 
 class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	@IBOutlet weak var toolBar: UIToolbar!
@@ -27,12 +35,12 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		realm = RLMRealm.defaultRealm()
 		
 		realm!.beginWriteTransaction()
-		realm!.deleteObjects(Session.allObjects())
+		realm!.deleteAllObjects()
 		realm!.commitWriteTransaction()
 		
 		if Session.allObjects().count == 0 {
 			if let url = latestURL() {
-				self.loadFromWeb(url, myGrade: 4, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
+				self.loadFromWeb(url, myGrade: 5, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
 			}
 		}
 		self.realm!.transactionWithBlock() {
@@ -45,11 +53,9 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			let date = TODAY.succ(.CalendarUnitDay, value: $0)!
 			
 			var sessions = [Session?]()
-			for s in Session.objectsWhere("day = \(date.weekday())") {
+			for s in Session.objectsWhere("day = \(date.weekday())").sortedResultsUsingProperty("period", ascending: true) {
 				sessions.append(s as? Session)
 			}
-			
-			sessions.sort({ ($0)?.period < ($1)?.period })
 			
 			return DateTableView.instance(date, sessions: sessions) => {
 				$0.setEditing(self.editing, animated: false)
@@ -144,15 +150,8 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			}
 			
 			if grade == myGrade && department == myDepartment && course == myCourse {
-				let dictionary = [
-					"09:00:00+09:00": ["10:30:00+09:00" : [1], "12:10:00+09:00" : [1, 2]],
-					"10:40:00+09:00": ["12:10:00+09:00" : [2]],
-					"13:00:00+09:00": ["14:30:00+09:00" : [3], "16:10:00+09:00" : [3, 4]],
-					"14:40:00+09:00": ["16:10:00+09:00" : [4]]
-				]
-				
 				realm!.transactionWithBlock() {
-					for p in dictionary[startTime!]![endTime!]! {
+					for p in timespanToPeriods[startTime!]![endTime!]! {
 						var deduction = Float(0)
 						if let s = Subject.find(name!) {
 							deduction = s.deduction
@@ -305,11 +304,6 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 				}
 			}
 			
-			let departmentDictionary = [
-				"M": "機械工学科", "E": "電気情報工学科", "C": "都市システム工学科", "A": "建築学科",
-				"ME": "機械・電子システム工学専攻", "CA": "建築・都市システム工学専攻"
-			]
-			
 			if let url = latestURL() {
 				let str = url.absoluteString!
 				let year = str.substringWithRange(Range<String.Index>(start: advance(str.endIndex, -10), end: advance(str.endIndex, -6)))
@@ -321,7 +315,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 						self.realm?.deleteObjects(Session.allObjects())
 					}
 					
-					self.loadFromWeb(url, myGrade: grade, myDepartment: departmentDictionary[department]!, myCourse: course)
+					self.loadFromWeb(url, myGrade: grade, myDepartment: symbolToDepartment[department]!, myCourse: course)
 					self.timetableView.reloadContents()
 				}))
 				
@@ -343,11 +337,11 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	}
 	
 	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return 32
+		return classSymbols.count
 	}
 
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
-		return (["1M", "1E", "1C", "1A", "2M", "2E", "2C", "2A", "3M", "3E", "3C", "3A", "4M", "4ED", "4EJ", "4C", "4A", "5M", "5ED", "5EJ", "5C", "5A", "1ME", "1AC", "2ME", "2AC", "-"])[row]
+		return classSymbols[row]
 	}
 	
 	func realmSetSchema() {
