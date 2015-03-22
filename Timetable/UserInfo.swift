@@ -41,6 +41,6 @@ class UserInfo : RLMObject {
 			}
 		}
 		
-		return UserInfo.allObjects().firstObject() as! UserInfo
+		return UserInfo.allObjects().firstObject() as UserInfo
 	}
 }

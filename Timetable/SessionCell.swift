@@ -37,7 +37,7 @@ class SessionCell: UITableViewCell, UITextFieldDelegate {
 	}
 	
 	class func instance(session : Session?) -> SessionCell {
-		return UINib(nibName: "SessionCell", bundle: nil).instantiateWithOwner(self, options: nil).first as! SessionCell => {
+		return UINib(nibName: "SessionCell", bundle: nil).instantiateWithOwner(self, options: nil).first as SessionCell => {
 			$0.session = session
 		}
 	}

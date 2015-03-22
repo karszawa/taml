@@ -26,7 +26,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	}
 	
 	class func instance(date : NSDate, sessions : [Session?]) -> DateTableView {
-		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as! DateTableView => {
+		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as DateTableView => {
 			$0.date = date
 			$0.sessions = sessions
 			$0.reloadData()
@@ -113,7 +113,7 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 
 			sessions = []
 			for s in Session.objectsWhere("day = \(date!.weekday())").sortedResultsUsingProperty("period", ascending: true) {
-				sessions.append((s as! Session))
+				sessions.append((s as Session))
 			}
 			
 			reloadData()

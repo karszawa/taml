@@ -49,12 +49,12 @@ class Subject : RLMObject {
 
 class Session : RLMObject {
 	dynamic var subject = Subject()
-	dynamic var day = 0 {
+	dynamic var day : Int = 0 {
 		didSet {
 			self.key = day.description + " " + period.description
 		}
 	}
-	dynamic var period  = 0 {
+	dynamic var period : Int = 0 {
 		didSet {
 			self.key = day.description + " " + period.description
 		}

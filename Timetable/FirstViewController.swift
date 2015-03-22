@@ -175,11 +175,11 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			return
 		}
 		
-		let currentTableView = self.timetableView.currentView as! DateTableView
-		let wday = currentTableView.date!.weekday()
+		let currentTableView = self.timetableView.currentView as? DateTableView
+		let wday = currentTableView!.date!.weekday()
 		let point = sender.locationInView(currentTableView)
-		if let period = currentTableView.indexPathForRowAtPoint(point)?.row,
-		   var session = Session.find(wday, period: period + 1) {
+		if let period = currentTableView!.indexPathForRowAtPoint(point)?.row {
+			var session = Session.find(wday, period: period + 1)!
 			var alert = UIAlertController(title: session.subject.title, message: nil, preferredStyle: .ActionSheet)
 
 			for tuple in [("欠席(-1.0)", Float(1.0)), ("遅刻(-0.5)", Float(0.5))] {
@@ -187,13 +187,13 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 					self.realm?.transactionWithBlock() {
 						session.subject.deduction -= tuple.1
 					}
-					currentTableView.reloadData()
+					currentTableView!.reloadData()
 				}))
 			}
 
 			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
 			
-			if let cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: period, inSection: 0)) {
+			if let cell = currentTableView!.cellForRowAtIndexPath(NSIndexPath(forRow: period, inSection: 0)) {
 				alert.popoverPresentationController?.sourceView = cell
 				alert.popoverPresentationController?.sourceRect = cell.bounds
 			}
@@ -217,7 +217,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	}
 	
 	func addButtonPushed(sender: UIButton) {
-		var view = (self.timetableView.currentView as! DateTableView)
+		var view = (self.timetableView.currentView as DateTableView)
 		let period = view.numberOfRowsInSection(0)
 		let newIndexPath = NSIndexPath(forRow: period, inSection: 0)
 		if Subject.find("") == nil {
@@ -252,10 +252,10 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			}
 			
 			let textFieldY = textField.absPoint().y + textField.frame.height
-			let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().minY
+			let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().minY
 			let offsetY = textFieldY - min(keyboardY, textFieldY)
 		
-			(self.timetableView.currentView as! DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
+			(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
 		}
 		
 		self.timetableView.scrollEnabled = false
@@ -267,7 +267,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			return
 		}
 		
-		let currentTableView = self.timetableView.currentView as! DateTableView
+		let currentTableView = self.timetableView.currentView as DateTableView
 		if currentTableView.numberOfRowsInSection(0) == 0 {
 			return
 		}
@@ -276,7 +276,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			if let cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as? SessionCell {
 				realm?.transactionWithBlock() {
 					let subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
-					let wday = (self.timetableView.currentView as! DateTableView).date?.weekday()
+					let wday = (self.timetableView.currentView as DateTableView).date?.weekday()
 					let session = Session(day: wday!, period: i+1, subject: subject)
 					
 					self.realm?.addOrUpdateObject(subject)
@@ -285,7 +285,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			}
 		}
 		
-		(self.timetableView.currentView as! DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
 		
 		self.timetableView.scrollEnabled = true
 	}
@@ -298,8 +298,8 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			let grade = String(cls[cls.startIndex]).toInt()!
 			var department = String(cls[advance(cls.startIndex, 1)])
 			var course : String? = nil
-			
-			if count(cls) == 3 {
+
+			if countElements(cls) == 3 {
 				let i = advance(cls.startIndex, 2)
 				if cls[i] == "D" {
 					course = "電気電子工学コース"
@@ -332,6 +332,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 				alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
 				presentViewController(alert, animated: true, completion: {
 					self.classTextField.resignFirstResponder()
+					return
 				})
 				
 			} else {
