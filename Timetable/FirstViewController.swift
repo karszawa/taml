@@ -43,23 +43,6 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		
 		self.timetableView.pageGenerator = {
 			let date = TODAY.succ(.CalendarUnitDay, value: $0)!
-			let deleteAction = { (inout ss : [Session?], it : Int) -> Void in
-				self.realm!.transactionWithBlock() {
-					self.realm!.deleteObject(ss[it])
-					ss.removeAtIndex(it)
-
-					for i in it ..< ss.count {
-						var subject = ss[i]!.subject
-						var day = ss[i]!.day
-						var period = ss[i]!.period - 1
-
-						var d = ss[i]
-						ss[i] = Session(day: day, period: period, subject: subject)
-						self.realm!.deleteObject(d)
-						self.realm?.addOrUpdateObject(ss[i])
-					}
-				}
-			}
 			
 			var sessions = [Session?]()
 			for s in Session.objectsWhere("day = \(date.weekday())") {
@@ -68,7 +51,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			
 			sessions.sort({ ($0)?.period < ($1)?.period })
 			
-			return DateTableView.instance(date, sessions: sessions, deleteAction: deleteAction) => {
+			return DateTableView.instance(date, sessions: sessions) => {
 				$0.setEditing(self.editing, animated: false)
 			}
 		}

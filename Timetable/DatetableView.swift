@@ -13,8 +13,6 @@ import Realm
 class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	var date : NSDate?
 	var sessions : [Session?] = []
-	var textfieldDelegate : FirstViewController?
-	var deleteAction : ((inout [Session?], Int) -> Void)?
 
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
@@ -27,11 +25,10 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 		self.dataSource = self
 	}
 	
-	class func instance(date : NSDate, sessions : [Session?], deleteAction : (inout [Session?], Int) -> Void) -> DateTableView {
+	class func instance(date : NSDate, sessions : [Session?]) -> DateTableView {
 		return UINib(nibName: "DateTableView", bundle: nil).instantiateWithOwner(self, options: nil).first as! DateTableView => {
 			$0.date = date
 			$0.sessions = sessions
-			$0.deleteAction = deleteAction
 			$0.reloadData()
 			$0.tableFooterView = UIView()
 		}
@@ -97,8 +94,28 @@ class DateTableView : UITableView, UITableViewDelegate, UITableViewDataSource {
 	
 	func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
 		if editingStyle == .Delete {
-			deleteAction!(&sessions, indexPath.row)
-			// deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+			self.sessions.removeAtIndex(indexPath.row)
+			
+			deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+			
+			let realm = RLMRealm.defaultRealm()
+			realm.transactionWithBlock() {
+				for i in indexPath.row ..< self.sessions.count {
+					var subject = self.sessions[i]!.subject
+					var day = self.sessions[i]!.day
+					var period = self.sessions[i]!.period
+					
+					realm.addOrUpdateObject(Session(day: day, period: period-1, subject: subject))
+				}
+
+				realm.deleteObject(Session.find(self.date!.weekday(), period: self.sessions.count+1)!)
+			}
+
+			sessions = []
+			for s in Session.objectsWhere("day = \(date!.weekday())").sortedResultsUsingProperty("period", ascending: true) {
+				sessions.append((s as! Session))
+			}
+			
 			reloadData()
 		}
 	}
