@@ -10,9 +10,9 @@ import UIKit
 import Realm
 
 let TODAY = NSDate()
-let classSymbols = [ "1M", "1E", "1C", "1A", "2M", "2E", "2C", "2A", "3M", "3E", "3C", "3A", "4M", "4ED", "4EJ", "4C", "4A", "5M", "5ED", "5EJ", "5C", "5A", "1ME", "1AC", "2ME", "2AC", "-" ]
-let symbolToDepartment = [ "M": "機械工学科", "E": "電気情報工学科", "C": "都市システム工学科", "A": "建築学科",  "ME": "機械・電子システム工学専攻", "CA": "建築・都市システム工学専攻" ]
-let timespanToPeriods = [
+let CLASSSYMBOLS = [ "1M", "1E", "1C", "1A", "2M", "2E", "2C", "2A", "3M", "3E", "3C", "3A", "4M", "4ED", "4EJ", "4C", "4A", "5M", "5ED", "5EJ", "5C", "5A", "1ME", "1AC", "2ME", "2AC", "-" ]
+let SYMBOLTODEPARTMENT = [ "M": "機械工学科", "E": "電気情報工学科", "C": "都市システム工学科", "A": "建築学科",  "ME": "機械・電子システム工学専攻", "CA": "建築・都市システム工学専攻" ]
+let TIMESPANTOPERIODS = [
 	"09:00:00+09:00": ["10:30:00+09:00" : [1], "12:10:00+09:00" : [1, 2]],
 	"10:40:00+09:00": ["12:10:00+09:00" : [2]],
 	"13:00:00+09:00": ["14:30:00+09:00" : [3], "16:10:00+09:00" : [3, 4]],
@@ -34,15 +34,6 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		
 		realm = RLMRealm.defaultRealm()
 		
-		realm!.beginWriteTransaction()
-		realm!.deleteAllObjects()
-		realm!.commitWriteTransaction()
-		
-		if Session.allObjects().count == 0 {
-			if let url = latestURL() {
-				self.loadFromWeb(url, myGrade: 5, myDepartment: "電気情報工学科", myCourse: "情報工学コース")
-			}
-		}
 		self.realm!.transactionWithBlock() {
 			self.realm!.addOrUpdateObject(Subject(title: "", location: "", deduction: 0))
 		}
@@ -151,7 +142,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			
 			if grade == myGrade && department == myDepartment && course == myCourse {
 				realm!.transactionWithBlock() {
-					for p in timespanToPeriods[startTime!]![endTime!]! {
+					for p in TIMESPANTOPERIODS[startTime!]![endTime!]! {
 						var deduction = Float(0)
 						if let s = Subject.find(name!) {
 							deduction = s.deduction
@@ -218,6 +209,11 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		var view = (self.timetableView.currentView as! DateTableView)
 		let period = view.numberOfRowsInSection(0)
 		let newIndexPath = NSIndexPath(forRow: period, inSection: 0)
+		if Subject.find("") == nil {
+			self.realm!.transactionWithBlock() {
+				self.realm!.addOrUpdateObject(Subject(title: "", location: "", deduction: Float(0.0)))
+			}
+		}
 		let session = Session(day: view.date!.weekday(), period: period + 1, subject: Subject.find("")!)
 		
 		self.realm!.transactionWithBlock() {
@@ -315,7 +311,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 						self.realm?.deleteObjects(Session.allObjects())
 					}
 					
-					self.loadFromWeb(url, myGrade: grade, myDepartment: symbolToDepartment[department]!, myCourse: course)
+					self.loadFromWeb(url, myGrade: grade, myDepartment: SYMBOLTODEPARTMENT[department]!, myCourse: course)
 					self.timetableView.reloadContents()
 				}))
 				
@@ -337,11 +333,11 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	}
 	
 	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return classSymbols.count
+		return CLASSSYMBOLS.count
 	}
 
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
-		return classSymbols[row]
+		return CLASSSYMBOLS[row]
 	}
 	
 	func realmSetSchema() {
