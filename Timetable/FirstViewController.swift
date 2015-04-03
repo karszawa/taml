@@ -109,11 +109,10 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 		}
 	}
 	
-	func latestURL() -> NSURL? {
+	func URLbyDate(year : Int, month : Int) -> NSURL? {
 		let urlPreffix = "http://www.akashi.ac.jp/data/timetable/timetable"
-		let year = TODAY.year()
 		
-		switch(TODAY.month()) {
+		switch(month) {
 		case 1...3:
 			return NSURL(string: urlPreffix + "\(year-1)10.xml")
 		case 4:
@@ -310,33 +309,35 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 				}
 			}
 			
-			if let url = latestURL() {
-				let str = url.absoluteString!
-				let year = str.substringWithRange(Range<String.Index>(start: advance(str.endIndex, -10), end: advance(str.endIndex, -6)))
-				let month = str.substringWithRange(Range<String.Index>(start: advance(str.endIndex, -6), end: advance(str.endIndex, -4)))
-				let alert = UIAlertController(title: "最新のシラバスをダウンロードします。", message: "最新の時間割は\(year)年\(month)月のものです。ダウンロード完了後に自動で時間割が書き換わります。", preferredStyle: .Alert)
-				
-				alert.addAction(UIAlertAction(title: "確認", style: .Default, handler: { action in
-					self.realm?.transactionWithBlock() {
-						self.realm?.deleteObjects(Session.allObjects())
-						var info = UserInfo.origin()
-						info.classInfo = cls
-						self.realm?.addOrUpdateObject(info)
-					}
-					
-					self.classTextField.text = cls
-					self.loadFromWeb(url, myGrade: grade, myDepartment: SYMBOLTODEPARTMENT[department]!, myCourse: course)
-					self.timetableView.reloadContents()
-				}))
-				
-				alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
-				presentViewController(alert, animated: true, completion: {
-					self.classTextField.resignFirstResponder()
-					return
-				})
-				
+			var url : NSURL
+			if NSData(contentsOfURL: URLbyDate(TODAY.year(), month: TODAY.month())!) != nil {
+				url = URLbyDate(TODAY.year(), month: TODAY.month())!
 			} else {
-				self.classTextField.resignFirstResponder()
+				url = URLbyDate(TODAY.succ(.CalendarUnitMonth, value: -1)!.year(), month: TODAY.succ(.CalendarUnitMonth, value: -1)!.month())!
+			}
+			
+			let str = url.absoluteString!
+			let year = str.substringWithRange(Range<String.Index>(start: advance(str.endIndex, -10), end: advance(str.endIndex, -6)))
+			let month = str.substringWithRange(Range<String.Index>(start: advance(str.endIndex, -6), end: advance(str.endIndex, -4)))
+			let alert = UIAlertController(title: "最新のシラバスをダウンロードします。", message: "最新の時間割は\(year)年\(month)月のものです。ダウンロード完了後に自動で時間割が書き換わります。", preferredStyle: .Alert)
+			
+			alert.addAction(UIAlertAction(title: "確認", style: .Default, handler: { action in
+				self.realm?.transactionWithBlock() {
+					self.realm?.deleteObjects(Session.allObjects())
+					var info = UserInfo.origin()
+					info.classInfo = cls
+					self.realm?.addOrUpdateObject(info)
+				}
+				
+				self.classTextField.text = cls
+				self.loadFromWeb(url, myGrade: grade, myDepartment: SYMBOLTODEPARTMENT[department]!, myCourse: course)
+				self.timetableView.reloadContents()
+			}))
+			
+			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
+			presentViewController(alert, animated: true) {
+				self.view.getFirstResponder()?.resignFirstResponder()
+				return
 			}
 		} else {
 			self.realm?.transactionWithBlock() {
