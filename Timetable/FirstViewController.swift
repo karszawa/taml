@@ -44,22 +44,31 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			let date = TODAY.succ(.CalendarUnitDay, value: $0)!
 			
 			var sessions = [Session?]()
-			for s in Session.objectsWhere("day = \(date.weekday())").sortedResultsUsingProperty("period", ascending: true) {
-				sessions.append(s as? Session)
-			}
-			
-			if !sessions.isEmpty {
-				for i in 1 ..< sessions.last!!.period {
-					if sessions[i-1]!.period != i {
-						let subject = Subject(title: "", location: "", deduction: Float(0))
-						sessions.insert(Session(day: date.weekday(), period: i, subject: subject), atIndex: i-1)
-					}
+
+			for i in 1..<100 {
+				if let s = Session.find(date.weekday(), period: i) {
+					sessions.append(s)
+				} else {
+					break
 				}
 			}
 			
-			return DateTableView.instance(date, sessions: sessions) => {
-				$0.setEditing(self.editing, animated: false)
-			}
+//			for s in Session.objectsWhere("day = \(date.weekday())").sortedResultsUsingProperty("period", ascending: true)  {
+//				sessions.append(s as? Session)
+//			}
+			
+//			if !sessions.isEmpty {
+//				for i in 1 ..< sessions.last!!.period {
+//					if sessions[i-1]!.period != i {
+//						let subject = Subject(title: "", location: "", deduction: Float(0))
+//						sessions.insert(Session(day: date.weekday(), period: i, subject: subject), atIndex: i-1)
+//					}
+//				}
+//			}
+			
+			var ret = DateTableView.instance(date, sessions: sessions)
+			ret.setEditing(self.editing, animated: false)
+			return ret
 		}
 		
 		self.timetableView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: "longPressed:") => {
