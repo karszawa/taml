@@ -27,6 +27,7 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 	func scrollViewDidScroll(scrollView: UIScrollView) {
 		let displacement = scrollView.contentOffset.x / frame.width - 1
 		
+		println(displacement)
 		if abs(displacement) >= 1 {
 			self.currentPageNumber += Int(displacement)
 			self.reloadContents()
