@@ -1,0 +1,58 @@
+\documentclass[a4paper,11pt]{jsarticle}
+\usepackage{amssymb,amsmath,graphicx, url, here}
+\usepackage[top=25truemm,bottom=25truemm,left=25truemm,right=25truemm]{geometry}
+
+\makeatletter
+ \DeclareRobustCommand\cite{\unskip
+\@ifnextchar[{\@tempswatrue\@citex}{\@tempswafalse\@citex[]}}
+ \def\@cite#1#2{$^{\hbox{\scriptsize{[#1\if@tempswa , #2\fi]}}}$}
+ \def\@biblabel#1{[#1]}
+\makeatother
+
+\begin{document}
+
+平成27年度 第5学年 情報工学実験ⅠI
+
+\vspace{0.5in}
+
+\begin{center}
+\Huge
+要求定義書
+
+\vspace{2in}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lll}
+実験報告者 & E1110 & 唐澤弘明 \\
+共同実験者 & E1031 & 西田悠 \\
+
+\end{tabular}
+\end{table}
+
+\vspace{0.5in}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{ll}
+提出日 & 2015年4月24日 \\
+\end{tabular}
+\end{table}
+\end{center}
+
+
+\setcounter{page}{0}
+\thispagestyle{empty}
+\newpage
+
+\section{概要}
+
+
+\section{システム化の目的}
+\section{データフローダイアグラム}
+\section{データディクショナリ}
+\section{開発スケジュール}
+\section{開発体制}
+
+
+\end{document}
