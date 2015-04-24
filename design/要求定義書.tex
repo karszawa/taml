@@ -46,13 +46,124 @@
 \newpage
 
 \section{概要}
+開発するシステムはiOSアプリとし、日々の時間割を簡単に確認でき、進級の要件にも関わる欠席数の管理を出来ることを目的とする。図\ref{img:appearance}にシステムの外観の想像図を示す。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=60mm]{./appearance.eps}
+\caption{システム外観の想像図 \label{img:appearance}}
+\end{figure}
 
 
 \section{システム化の目的}
+
+\begin{itemize}
+\item 時間割を知ることができる。
+\item 欠席数を正確に管理できる。
+\item ブラウザよりスマフォアプリの方が手っ取り早い。
+\end{itemize}
+
+\section{システムの機能要件}
+
+\begin{itemize}
+\item 時間割を表示できる。
+	\begin{itemize}
+	\item 授業名・場所・時限・欠席数を表示できる。
+	\item 日ごとの時間割と週ごとの時間割を画面の向きに応じてそれぞれ表示できる。
+	\end{itemize}
+\item 時間割を編集できる。
+	\begin{itemize}
+	\item 指定したクラス・コースに応じた時間割をWebからダウンロードし更新できる。
+	\item 授業名・場所を編集できる。
+	\item 欠席数を増加/減少させることができる。
+	\end{itemize}
+\item 欠席数を記録できる。
+	\begin{itemize}
+	\item 欠席・遅刻は特に簡単に記録できる。
+	\end{itemize}
+\end{itemize}
+
+
 \section{データフローダイアグラム}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=170mm]{./DFD.eps}
+\caption{データフローダイアグラム \label{img:dfd}}
+\end{figure}
+
 \section{データディクショナリ}
+\begin{verbatim}
+時間割生データ = 1Eの時間割 + 2Eの時間割 + ... + 2ACの時間割
+週毎の時間割 = 月曜日1限の授業 + 月曜日2限の授業 + ... + 金曜日4限の授業
+日毎の時間割 = 1限の授業 + 2限の授業 + ... + n限の授業
+授業 = 授業名 + 場所 + 欠席数
+クラス = [1M|1E|...|2AC]
+端末の向き = [横向き|縦向き]
+\end{verbatim}
+
+\section{ミニスペック}
+以下に構造化言語によるミニスペックを示す。
+
+\begin{verbatim}
+第一DFD
+時間割をダウンロードする処理を開始する
+    ユーザは自分のクラス・コースを指定する
+    web上から時間割生データをダウンロードする
+    ダウンロードしたxmlファイルを解析する
+    解析結果（授業、週ごとの時間割、指定されたクラス）をDBに保存する
+処理を終了する
+
+第二DFD
+時間割を表示する処理を開始する
+    アプリの起動が初回の場合
+        DBに保存されたデータが無いため、何も表示しない
+    そうで無い場合
+        ユーザはクラス、コースを指定する
+        DBから指定されたクラス・コースの日毎か週毎の時間割、授業データを取得する
+        端末の向きが縦の場合
+            日毎の時間割を整形して表示する
+        端末の向きが横の場合
+            週毎の時間割を整形して表示する
+処理を終了する
+
+第三DFD
+授業データを編集する処理を開始する
+    ユーザは任意の授業を指定する
+    ユーザはその授業に対して「新しい授業名」、「新しい場所」、「新しい欠席数」を指定する
+    DBを更新する
+処理を終了する
+
+第四DFD
+欠席数・遅刻数を増やす処理を開始する
+    ユーザは任意の授業を指定する
+    DBから指定された授業データを取得する
+    ユーザはその授業に対して「欠席」か「遅刻」を指定する
+    DBを更新する
+処理を終了する
+\end{verbatim}
+
 \section{開発スケジュール}
+
+\begin{table}[H]
+\begin{tabular}{|l|l|l|l|l|} \hline
+4/24 & 5/22 & 7/10 & 7/17 & 7/24 \\ \hline
+要求分析・定義 & 外部・内部設計 & プログラミング & テスト修正とドキュメント作成 & ソフトウェア発表 \\ \hline
+\end{tabular}
+\end{table}
+
 \section{開発体制}
 
+\subsection{唐澤弘明}
+\begin{itemize}
+\item 外部設計と内部設計
+\item プログラム設計とプログラミング
+\end{itemize}
+
+\subsection{西田悠}
+\begin{itemize}
+\item 要求分析と要求定義
+\item テストとドキュメント作成
+\end{itemize}
 
 \end{document}
