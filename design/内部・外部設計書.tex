@@ -1,0 +1,70 @@
+\documentclass[a4paper,11pt]{jsarticle}
+\usepackage{amssymb,amsmath,graphicx, url, here}
+\usepackage[top=25truemm,bottom=25truemm,left=25truemm,right=25truemm]{geometry}
+
+\makeatletter
+ \DeclareRobustCommand\cite{\unskip
+\@ifnextchar[{\@tempswatrue\@citex}{\@tempswafalse\@citex[]}}
+ \def\@cite#1#2{$^{\hbox{\scriptsize{[#1\if@tempswa , #2\fi]}}}$}
+ \def\@biblabel#1{[#1]}
+\makeatother
+
+\begin{document}
+
+平成27年度 第5学年 情報工学実験ⅠI
+
+\vspace{0.5in}
+
+\begin{center}
+\Huge
+外部・内部設計書
+
+\vspace{2in}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lll}
+実験報告者 & E1110 & 唐澤弘明 \\
+共同実験者 & E1031 & 西田悠 \\
+
+\end{tabular}
+\end{table}
+
+\vspace{0.5in}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{ll}
+提出日 & 2015年5月28日 \\
+\end{tabular}
+\end{table}
+\end{center}
+
+
+\setcounter{page}{0}
+\thispagestyle{empty}
+\newpage
+
+\section{概要}
+開発するシステムはiOSアプリとし、日々の時間割を簡単に確認でき、進級の要件にも関わる欠席数の管理を出来ることを目的とする。図\ref{img:appearance}にシステムの外観の想像図を示す。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=60mm]{./appearance.eps}
+\caption{システム外観の想像図 \label{img:appearance}}
+\end{figure}
+
+
+\section{システム方式}
+\subsection{サーバのハードウェアとソフトウェア}
+\subsubsection{サーバに関する情報}
+\begin{itemize}
+    \item ホスト名: navel.knet
+    \item IPアドレス: 172.16.32.8
+\end{itemize}
+
+\subsubsection{サーバのハードウェア}
+サーバのハードウェアにはHP Workstation上の仮想マシン(KVM)とする。
+
+
+\end{document}
