@@ -13,7 +13,7 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 	var pageGenerator : ((Int) -> UIView)?
 	var currentPageNumber = 0
 	var currentView : UIView {
-		return self.subviews[1] as UIView
+		return self.subviews[1] as! UIView
 	}
 
 	required init(coder aDecoder: NSCoder) {
@@ -41,7 +41,7 @@ class PersistScrollView : UIScrollView, UIScrollViewDelegate {
 		}
 		
 		for i in 0...2 {
-			let newPage = (pageGenerator!(currentPageNumber + i - 1) as DateTableView)
+			let newPage = (pageGenerator!(currentPageNumber + i - 1) as! DateTableView)
 			newPage.frame.size = self.frame.size
 			newPage.frame.origin.x = self.frame.width * CGFloat(i)
 			self.addSubview(newPage)

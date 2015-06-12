@@ -22,14 +22,6 @@ class Subject : RLMObject {
 		super.init(object:object)
 	}
 	
-	override init(object value: AnyObject!, schema: RLMSchema!) {
-		super.init(object: value, schema: schema)
-	}
-	
-	override init(objectSchema: RLMObjectSchema) {
-		super.init(objectSchema: objectSchema)
-	}
-	
 	init(title : String, location : String, deduction : Float) {
 		super.init()
 
@@ -67,14 +59,6 @@ class Session : RLMObject {
 	
 	override init(object: AnyObject?) {
 		super.init(object:object)
-	}
-	
-	override init(object value: AnyObject!, schema: RLMSchema!) {
-		super.init(object: value, schema: schema)
-	}
-	
-	override init(objectSchema: RLMObjectSchema) {
-		super.init(objectSchema: objectSchema)
 	}
 	
 	init(day : Int, period : Int, subject : Subject) {

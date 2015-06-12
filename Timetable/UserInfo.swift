@@ -20,14 +20,6 @@ class UserInfo : RLMObject {
 	override init(object: AnyObject?) {
 		super.init(object:object)
 	}
-	
-	override init(object value: AnyObject!, schema: RLMSchema!) {
-		super.init(object: value, schema: schema)
-	}
-	
-	override init(objectSchema: RLMObjectSchema) {
-		super.init(objectSchema: objectSchema)
-	}
 
 	override class func primaryKey() -> String {
 		return "key"
@@ -41,6 +33,6 @@ class UserInfo : RLMObject {
 			}
 		}
 		
-		return UserInfo.allObjects().firstObject() as UserInfo
+		return UserInfo.allObjects().firstObject() as! UserInfo
 	}
 }

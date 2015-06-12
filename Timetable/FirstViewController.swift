@@ -225,7 +225,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	}
 	
 	func addButtonPushed(sender: UIButton) {
-		var view = (self.timetableView.currentView as DateTableView)
+		var view = (self.timetableView.currentView as! DateTableView)
 		let period = view.numberOfRowsInSection(0)
 		let newIndexPath = NSIndexPath(forRow: period, inSection: 0)
 		if Subject.find("") == nil {
@@ -260,10 +260,10 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			}
 			
 			let textFieldY = textField.absPoint().y + textField.frame.height
-			let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue().minY
+			let keyboardY = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().minY
 			let offsetY = textFieldY - min(keyboardY, textFieldY)
 		
-			(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
+			(self.timetableView.currentView as! DateTableView).setContentOffset(CGPoint(x: 0, y: offsetY), animated: true)
 		}
 		
 		self.timetableView.scrollEnabled = false
@@ -275,7 +275,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			return
 		}
 		
-		let currentTableView = self.timetableView.currentView as DateTableView
+		let currentTableView = self.timetableView.currentView as! DateTableView
 		if currentTableView.numberOfRowsInSection(0) == 0 {
 			return
 		}
@@ -284,7 +284,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			if let cell = currentTableView.cellForRowAtIndexPath(NSIndexPath(forRow: i, inSection: 0)) as? SessionCell {
 				realm?.transactionWithBlock() {
 					let subject = Subject(title: cell.titleTextField.text, location: cell.locationTextField.text, deduction: cell.deductionTextField.text.floatValue)
-					let wday = (self.timetableView.currentView as DateTableView).date?.weekday()
+					let wday = (self.timetableView.currentView as! DateTableView).date?.weekday()
 					let session = Session(day: wday!, period: i+1, subject: subject)
 					
 					self.realm?.addOrUpdateObject(subject)
@@ -293,7 +293,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			}
 		}
 		
-		(self.timetableView.currentView as DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+		(self.timetableView.currentView as! DateTableView).setContentOffset(CGPoint(x: 0, y: 0), animated: true)
 		
 		self.timetableView.scrollEnabled = true
 	}
@@ -307,7 +307,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			var department = String(cls[advance(cls.startIndex, 1)])
 			var course : String? = nil
 
-			if countElements(cls) == 3 {
+			if count(cls) == 3 {
 				let i = advance(cls.startIndex, 2)
 				if cls[i] == "D" {
 					course = "電気電子工学コース"

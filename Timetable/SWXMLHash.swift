@@ -406,9 +406,9 @@ public class XMLElement {
         }
 
         for (keyAny,valueAny) in attributes {
-            let key = keyAny as String
-            let value = valueAny as String
-            element.attributes[key] = value
+            let key = keyAny as? String
+            let value = valueAny as? String
+            element.attributes[key!] = value
         }
 
         return element
