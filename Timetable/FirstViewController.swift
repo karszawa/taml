@@ -345,8 +345,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			
 			alert.addAction(UIAlertAction(title: "キャンセル", style: .Cancel, handler: nil))
 			presentViewController(alert, animated: true) {
-				self.view.getFirstResponder()?.resignFirstResponder()
-				return
+				self.classTextField.resignFirstResponder()
 			}
 		} else {
 			self.realm?.transactionWithBlock() {
