@@ -45,7 +45,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 			
 			var sessions = [Session?]()
 
-			for i in 1..<100 {
+			for i in 1..<20 {
 				if let s = Session.find(date.weekday(), period: i) {
 					sessions.append(s)
 				} else {
@@ -145,33 +145,38 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 	
 	func loadFromWeb(url : NSURL, myGrade : Int, myDepartment : String, myCourse : String?) {
 		let xml = SWXMLHash.parse(NSData(contentsOfURL: url)!)
-		
-		for lecture in xml["TimeTable_xml"]["TimeTable"]["Lectures"]["Lecture"] {
-			let name = lecture["Name"].element?.text
-			var grade = lecture["Grade"].element?.text?.toInt()
+
+		for lecture in xml["Timetable_xml"]["Timetable"]["Lectures"]["Lecture"].all {
+			let grade = lecture["Grade"].element!.text!.toInt()
 			let department = lecture["Department"].element!.text!
-			let wday = lecture["Wday"].element!.text!.toInt()! + 1
-			let location = lecture["Location"].element?.text
 			let course = lecture["Course"].element?.text
-			let startTime = lecture["StartTime"].element?.text
-			var endTime = lecture["EndTime"].element?.text
-			if endTime == "15:25:00+09:00" {
-				endTime = "16:10:00+09:00"
-			}
 			
 			if grade == myGrade && department == myDepartment && course == myCourse {
-				realm!.transactionWithBlock() {
-					for p in TIMESPANTOPERIODS[startTime!]![endTime!]! {
-						var deduction = Float(0)
-						if let s = Subject.find(name!) {
-							deduction = s.deduction
+				for period in lecture["Periods"]["Period"].all {
+					let wday = period["Wday"].element!.text!.toInt()! + 1
+					let startTime = period["StartTime"].element!.text!
+					var endTime = period["EndTime"].element!.text!
+					
+					if endTime == "15:25:00+09:00" {
+						endTime = "16:10:00+09:00"
+					}
+					
+					let name = lecture["Name"].element?.text
+					let location = lecture["Location"].element?.text
+					
+					realm!.transactionWithBlock() {
+						for p in TIMESPANTOPERIODS[startTime]![endTime]! {
+							var deduction = Float(0)
+							if let s = Subject.find(name!) {
+								deduction = s.deduction
+							}
+						
+							var subject = Subject(title: name!, location: location ?? "", deduction: deduction)
+							var session = Session(day: wday, period: p, subject: subject)
+						
+							self.realm!.addOrUpdateObject(subject)
+							self.realm!.addOrUpdateObject(session)
 						}
-						
-						var subject = Subject(title: name!, location: location ?? "", deduction: deduction)
-						var session = Session(day: wday, period: p, subject: subject)
-						
-						self.realm!.addOrUpdateObject(subject)
-						self.realm!.addOrUpdateObject(session)
 					}
 				}
 			}
