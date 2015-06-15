@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		464FEFCC1B2A693E009F2F2F /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464FEFCB1B2A693E009F2F2F /* Realm.framework */; };
-		464FEFCE1B2A695F009F2F2F /* RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464FEFCD1B2A695F009F2F2F /* RLMSupport.swift */; };
+		46E1259F1B2E8D9A007C3735 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46E1259E1B2E8D9A007C3735 /* Realm.framework */; };
+		46E125A11B2E8DAD007C3735 /* RLMSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E125A01B2E8DAD007C3735 /* RLMSupport.swift */; };
 		A001E6FF1A92FF09009F712F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A001E6FE1A92FF09009F712F /* libc++.dylib */; };
 		A001E7011A9316DC009F712F /* TimeToPeriod.plist in Resources */ = {isa = PBXBuildFile; fileRef = A001E7001A9316DC009F712F /* TimeToPeriod.plist */; };
 		A00DE29F1ABEFFB70080F583 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00DE29E1ABEFFB70080F583 /* UserInfo.swift */; };
@@ -38,8 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		464FEFCB1B2A693E009F2F2F /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
-		464FEFCD1B2A695F009F2F2F /* RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RLMSupport.swift; sourceTree = "<group>"; };
+		46E1259E1B2E8D9A007C3735 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
+		46E125A01B2E8DAD007C3735 /* RLMSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RLMSupport.swift; sourceTree = "<group>"; };
 		A001E6FE1A92FF09009F712F /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		A001E7001A9316DC009F712F /* TimeToPeriod.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TimeToPeriod.plist; sourceTree = "<group>"; };
 		A00DE29E1ABEFFB70080F583 /* UserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				464FEFCC1B2A693E009F2F2F /* Realm.framework in Frameworks */,
+				46E1259F1B2E8D9A007C3735 /* Realm.framework in Frameworks */,
 				A001E6FF1A92FF09009F712F /* libc++.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,7 +111,7 @@
 		A0742BCB1A8A062D005C9174 = {
 			isa = PBXGroup;
 			children = (
-				464FEFCB1B2A693E009F2F2F /* Realm.framework */,
+				46E1259E1B2E8D9A007C3735 /* Realm.framework */,
 				A0742BD61A8A062E005C9174 /* Timetable */,
 				A0742BEE1A8A062E005C9174 /* TimetableTests */,
 				A0742BD51A8A062E005C9174 /* Products */,
@@ -143,7 +143,7 @@
 			children = (
 				A001E6FE1A92FF09009F712F /* libc++.dylib */,
 				A0742C051A8A06EB005C9174 /* SWXMLHash.swift */,
-				464FEFCD1B2A695F009F2F2F /* RLMSupport.swift */,
+				46E125A01B2E8DAD007C3735 /* RLMSupport.swift */,
 				A0742C071A8A198B005C9174 /* MyPlayground.playground */,
 				A0742BD81A8A062E005C9174 /* Info.plist */,
 				A001E7001A9316DC009F712F /* TimeToPeriod.plist */,
@@ -277,7 +277,7 @@
 				A0742C011A8A0675005C9174 /* PersistScrollView.swift in Sources */,
 				A0742C021A8A0675005C9174 /* Subject.swift in Sources */,
 				A0742C061A8A06EB005C9174 /* SWXMLHash.swift in Sources */,
-				464FEFCE1B2A695F009F2F2F /* RLMSupport.swift in Sources */,
+				46E125A11B2E8DAD007C3735 /* RLMSupport.swift in Sources */,
 				A00DE29F1ABEFFB70080F583 /* UserInfo.swift in Sources */,
 				A0742C001A8A0675005C9174 /* DateTableView.swift in Sources */,
 			);
